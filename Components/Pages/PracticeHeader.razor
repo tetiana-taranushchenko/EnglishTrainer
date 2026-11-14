@@ -1,0 +1,34 @@
+@using Microsoft.AspNetCore.Components.Forms
+
+<header class="practice-header">
+    <h1>English Trainer</h1>
+
+    <div class="csv-upload">
+        <label class="csv-picker">
+            <span>Choose File</span>
+            <InputFile OnChange="SelectCsv" accept=".csv" />
+        </label>
+
+        <p class="csv-file-name" role="status">
+            @if (_fileName is not null)
+            {
+                <span title="@_fileName">@_fileName</span>
+            }
+        </p>
+    </div>
+</header>
+
+@code {
+    private string? _fileName;
+
+    [Parameter]
+    public EventCallback<IBrowserFile> OnCsvSelected { get; set; }
+
+    private async Task SelectCsv(InputFileChangeEventArgs args)
+    {
+        var file = args.File;
+        _fileName = file.Name;
+
+        await OnCsvSelected.InvokeAsync(file);
+    }
+}

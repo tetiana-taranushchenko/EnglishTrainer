@@ -1,0 +1,51 @@
+<div class="answer-footer">
+    @if (!string.IsNullOrWhiteSpace(Example))
+    {
+        <div class="answer-example @(IsCorrect.HasValue ? "" : "example-hidden")"
+             aria-hidden="@(!IsCorrect.HasValue ? "true" : "false")">
+            <span class="example-label">Example</span>
+            <p>
+                @foreach (var part in GetExampleParts())
+                {
+                    @if (string.Equals(part, CorrectAnswer, StringComparison.OrdinalIgnoreCase))
+                    {
+                        <strong>@part</strong>
+                    }
+                    else
+                    {
+                        @part
+                    }
+                }
+            </p>
+        </div>
+    }
+
+    <button type="button"
+            class="next-button"
+            @onclick="OnNext"
+            disabled="@(!IsCorrect.HasValue)">
+        Next
+    </button>
+</div>
+
+@code {
+    [Parameter] public bool? IsCorrect { get; set; }
+    [Parameter] public string CorrectAnswer { get; set; } = string.Empty;
+    [Parameter] public string? Example { get; set; }
+    [Parameter] public EventCallback OnNext { get; set; }
+    
+    private string[] GetExampleParts()
+    {
+        var text = Example ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(CorrectAnswer))
+        {
+            return [text];
+        }
+
+        var answer = System.Text.RegularExpressions.Regex.Escape(CorrectAnswer);
+        return System.Text.RegularExpressions.Regex.Split(
+            text,
+            $@"(?i)(?<!\w)({answer})(?!\w)");
+    }
+}

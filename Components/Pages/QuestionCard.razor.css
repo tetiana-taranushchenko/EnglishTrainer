@@ -1,0 +1,166 @@
+.part-of-speech {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: #eeedff;
+    color: #40369a;
+}
+
+.answer-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.answer-option {
+    appearance: none;
+    display: grid;
+    grid-template-columns: 1.25rem minmax(0, 1fr) 1.25rem;
+    align-items: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 10px 14px;
+    border: 1px solid #d5dbea;
+    border-radius: 10px;
+    background: #fff;
+    color: #18233a;
+    font: inherit;
+    text-align: center;
+    overflow-wrap: anywhere;
+    cursor: pointer;
+}
+
+.answer-option > span:first-child {
+    grid-column: 2;
+}
+
+.answer-icon {
+    grid-column: 3;
+    font-weight: 700;
+}
+
+.answer-option:not(:disabled):hover {
+    border-color: #6254c9;
+    background: #f5f3ff;
+}
+
+.answer-option:disabled {
+    opacity: 1;
+    cursor: default;
+}
+
+.answer-option:disabled:not(.answer-correct):not(.answer-incorrect) {
+    background: #f8f9fc;
+    color: #526078;
+}
+
+.answer-option.answer-correct {
+    border-color: #8ac6a4;
+    background: #eaf7ef;
+    color: #185735;
+}
+
+.answer-option.answer-incorrect {
+    border-color: #e8a4a4;
+    background: #fceeee;
+    color: #8b2525;
+}
+
+@media (max-width: 480px) {
+    .answer-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+.question-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.question-heading h2 {
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.question-heading .part-of-speech {
+    flex-shrink: 0;
+}
+
+.explanation {
+    position: relative;
+    min-height: 3rem;
+    margin-top: 12px;
+    font-size: 0.875rem;
+}
+
+.explanation-toggle {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 8rem;
+    min-height: 30px;
+    padding: 3px 8px;
+    border: 1px solid #6254c9;
+    border-radius: 8px;
+    background: transparent;
+    color: #5142b8;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    list-style: none;
+    grid-auto-flow: column;
+    justify-content: center;
+    gap: 8px;
+}
+
+.explanation-toggle::-webkit-details-marker {
+    display: none;
+}
+
+.explanation-toggle:focus-visible {
+    outline: 2px solid #5142b8;
+    outline-offset: 2px;
+}
+
+.explanation-toggle::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+}
+
+.explanation-toggle::after {
+    /* Keep the existing icon styles. */
+    transform: rotate(-45deg);
+}
+
+.explanation[open] .explanation-toggle::after {
+    transform: rotate(135deg);
+}
+
+.hide-label,
+.explanation[open] .show-label {
+    display: none;
+}
+
+.explanation[open] .hide-label {
+    display: inline;
+}
+
+.explanation-text {
+    position: absolute;
+    inset: 0 0 0 8.75rem;
+    padding-top: calc((30px - 1.5em) / 2);
+    margin: 0;
+    line-height: 1.5;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    box-sizing: border-box;
+}

@@ -1,0 +1,71 @@
+.answer-footer {
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.answer-result {
+    min-height: 22px;
+    color: #18233a;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 22px;
+    overflow-wrap: anywhere;
+}
+
+.answer-result p,
+.answer-example p {
+    margin: 0;
+}
+
+.result-correct {
+    color: #185735;
+}
+
+.answer-example {
+    color: #18233a;
+    font-size: 1rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.example-label {
+    display: block;
+    margin-bottom: 2px;
+    color: #18233a;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.example-hidden {
+    visibility: hidden;
+}
+
+.next-button {
+    justify-self: end;
+    min-width: 112px;
+    min-height: 44px;
+    padding: 10px 20px;
+    border: 0;
+    border-radius: 10px;
+    background: #5142b8;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.next-button:hover:not(:disabled) {
+    background: #40339a;
+}
+
+.next-button:focus-visible {
+    outline: 2px solid #5142b8;
+    outline-offset: 3px;
+}
+
+.next-button:disabled {
+    background: #eeebf7;
+    color: #625d75;
+    cursor: default;
+}

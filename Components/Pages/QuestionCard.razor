@@ -1,0 +1,72 @@
+@using EnglishTrainer.Models
+
+<div class="question-heading">
+    <h2 lang="uk">@Question.UkrainianText</h2>
+    <span class="part-of-speech">@Question.PartOfSpeech</span>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Question.Explanation))
+{
+    <details class="explanation" @key="Question">
+        <summary class="explanation-toggle">Explanation</summary>
+        <p class="explanation-text">@GetExplanationText()</p>
+    </details>
+}
+
+<div class="answer-options">
+    @foreach (var option in Question.Options)
+    {
+        var answerClass = GetAnswerClass(option);
+
+        <button type="button"
+                class="answer-option @answerClass"
+                @onclick="() => OnAnswerSelected.InvokeAsync(option)"
+                disabled="@(IsCorrect.HasValue)">
+            <span>@option</span>
+            <span class="answer-icon" aria-hidden="true">
+                @if (answerClass == "answer-correct")
+                {
+                    <text>✓</text>
+                }
+                else if (answerClass == "answer-incorrect")
+                {
+                    <text>✕</text>
+                }
+            </span>
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public PracticeQuestion Question { get; set; } = default!;
+    
+    [Parameter] public bool? IsCorrect { get; set; }
+    [Parameter] public string? SelectedAnswer { get; set; }
+    [Parameter] public EventCallback<string> OnAnswerSelected { get; set; }
+    
+    private string GetAnswerClass(string option)
+    {
+        if (!IsCorrect.HasValue)
+        {
+            return "";
+        }
+
+        if (option == Question.CorrectAnswer)
+        {
+            return "answer-correct";
+        }
+
+        return option == SelectedAnswer ? "answer-incorrect" : "";
+    }
+    
+    private string GetExplanationText()
+    {
+        var text = Question.Explanation?.TrimStart() ?? "";
+        var prefix = $"({Question.PartOfSpeech})";
+
+        return text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+            ? text[prefix.Length..].TrimStart()
+            : text;
+    }
+}

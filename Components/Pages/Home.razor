@@ -1,0 +1,32 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using EnglishTrainer.Data
+@using EnglishTrainer.Models
+
+<PageTitle>English Trainer</PageTitle>
+
+<div class="practice-page">
+    <section class="practice-card">
+        @if (_isComplete) 
+        {
+            <PracticeSummary OnRestart="RestartPractice" />
+        }
+        else
+        {
+            <PracticeHeader OnCsvSelected="HandleCsvSelected" />
+            @if (_importedQuestions is not null)
+            {
+                <QuestionCard Question="@_session.CurrentQuestion"
+                              IsCorrect="@_isCorrect"
+                              SelectedAnswer="@_selectedAnswer"
+                              OnAnswerSelected="SelectAnswer" />
+
+                <AnswerFooter IsCorrect="@_isCorrect"
+                              CorrectAnswer="@_session.CurrentQuestion.CorrectAnswer"
+                              OnNext="GoToNextQuestion" 
+                              Example="@_session.CurrentQuestion.Example"/>
+            }
+        }
+    </section>
+</div>
+

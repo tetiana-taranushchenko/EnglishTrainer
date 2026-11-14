@@ -1,0 +1,25 @@
+.practice-page {
+    min-height: 100vh;
+    padding: clamp(16px, 5vw, 56px) 16px;
+    background: #faf7f2;
+    color: #18233a;
+}
+
+.practice-card {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: clamp(20px, 5vw, 36px);
+    border: 1px solid #e5e0d8;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.practice-card h1 {
+    font-size: 1.5rem;
+}
+
+.instruction {
+    margin-bottom: 24px;
+    color: #526078;
+}
+

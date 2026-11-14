@@ -1,0 +1,9 @@
+        <h1>Practice Complete</h1>
+        <p class="instruction">You have completed the practice session.</p>
+        <button type="button" class="restart-button" @onclick="OnRestart">
+            Start again
+        </button>
+
+        @code {
+            [Parameter] public EventCallback OnRestart { get; set; }
+        }

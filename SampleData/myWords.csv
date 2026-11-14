@@ -1,0 +1,39 @@
+word,translation,explanation,example,type
+circumstance,обставина,A fact or condition that affects a situation.,A change in the deployment schedule was the only circumstance that delayed the release.,noun
+contemplate,обмірковувати; розглядати,To think carefully about a possible action.,The team began to contemplate a complete rewrite of the legacy code.,verb
+conduct,проводити; вести,To organize and carry out an activity.,The team needs to conduct a thorough code review.,verb
+triage,сортування; визначення пріоритетів; визначати пріоритети,"To sort items by urgency, or the process of doing so.",We need to triage these bugs before the next sprint.,noun/verb
+submission,подання; відправка даних,"The act of sending something for review or processing, or the item sent.",Please check your form submission for any errors.,noun
+severity,серйозність; ступінь критичності,How serious a problem or its effects are.,The team raised the severity of the bug after it caused data loss.,noun
+reliable,надійний,Able to work consistently as expected.,We need a reliable server to host our database.,adjective
+reliability,надійність,The ability to work consistently as expected over time.,System reliability is our top priority this quarter.,noun
+maintain,підтримувати; обслуговувати,To keep something working properly over time.,It is difficult to maintain code without documentation.,verb
+maintenance,обслуговування,Work done to keep a system or piece of equipment functioning.,Scheduled maintenance will happen this Sunday.,noun
+maintainability,зручність супроводу,"How easy it is to understand, modify, and fix software.",Refactoring helps to improve the maintainability of the software.,noun
+usability,зручність використання,How easy a product is to use to accomplish a goal.,The new interface significantly improved the app's usability.,noun
+availability,доступність,The extent to which a system or service is accessible when needed.,Our goal is to ensure 99.9% service availability.,noun
+intentional,навмисний,Done deliberately or on purpose.,This delay was intentional to prevent server overload.,adjective
+unintentional,ненавмисний,Happening by accident or without being planned.,The bug was an unintentional side effect of the update.,adjective
+uncertainty,невпевненість; невизначеність,A lack of certainty about what is true or what will happen.,There is some uncertainty about the project's deadline.,noun
+impacts of,наслідки; вплив чогось,"The effects caused by a particular action, condition, or event.",We measured the impacts of technical debt on delivery times.,phrase
+suggest,пропонувати; натякати,To put forward an idea for consideration or indicate something indirectly.,I suggest using a different library for this task.,verb
+time-consuming,трудомісткий; той що займає багато часу,Requiring a lot of time to complete.,Manual testing is very time-consuming.,adjective
+insights,цінні висновки; глибше розуміння,Useful conclusions or deeper understanding gained through observation or analysis.,User interviews gave us insights into why people abandon checkout.,noun
+encounter,стикнутися з; зустріти,"To come across or experience something, often unexpectedly.",You might encounter some issues during installation.,verb
+concern,занепокоєння; стосуватися,"A worry about something, or to relate to or affect someone or something.",Security is a major concern for our clients.,noun/verb
+compliance,відповідність вимогам/стандартам,"Acting in accordance with rules, standards, or requirements.",The software must be in compliance with GDPR.,noun
+investigation,розслідування; вивчення,A careful inquiry to discover what happened or what caused a problem.,We are starting an investigation into the memory leak.,noun
+foresee,передбачати,To recognize in advance that something is likely to happen.,I don't foresee any major problems with this approach.,verb
+facilitate,сприяти; полегшувати,To make an action or process easier to carry out.,This tool will facilitate better communication in the team.,verb
+anticipate,очікувати; передбачати,"To expect something to happen, sometimes preparing for it in advance.",We anticipate a large number of users during the launch.,verb
+technical debt,технічний борг,The future cost of reworking software after taking shortcuts or making compromises.,High technical debt makes it harder to add new features.,noun phrase
+neglect,нехтувати,To fail to give something the care or attention it needs.,Teams that neglect testing often discover defects late in the release process.,verb
+chime in,долучатися до розмови; вставляти репліку,To join a conversation by adding a comment or opinion.,Feel free to chime in if you have another suggestion for the design.,phrasal verb
+deteriorate,погіршуватися,To become worse over time.,The performance will deteriorate if the database isn't optimized.,verb
+evolving,що розвивається; що змінюється,Changing or developing over time.,We adapt our roadmap to evolving user needs.,adjective
+engaged,залучений; зацікавлений,Actively involved in or interested in an activity.,Users remained engaged throughout the onboarding session.,adjective
+transparent,прозорий; зрозумілий,Open and clear about how decisions are made or how something works.,We need to be transparent about how we use client data.,adjective
+enhance,покращувати; посилювати,To improve the quality or effectiveness of something.,This update will enhance the security of the application.,verb
+properly,належним чином,In the correct or appropriate way.,Make sure the environment is properly configured.,adverb
+suitable,відповідний; придатний,Right or appropriate for a particular purpose or situation.,This framework is suitable for small-scale projects.,adjective
+encourage,заохочувати; стимулювати,To give someone support or motivation to do something.,We encourage our developers to learn new technologies.,verb
