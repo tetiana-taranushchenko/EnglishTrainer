@@ -1,5 +1,7 @@
+using System.Globalization;
+using CsvHelper;
+using CsvHelper.Configuration;
 using EnglishTrainer.Models;
-using Microsoft.VisualBasic.FileIO;
 
 namespace EnglishTrainer.Data;
 
@@ -7,54 +9,48 @@ public class CsvVocabularyImporter
 {
     public const long MaxSizeBytes = 5 * 1024 * 1024;
     public const int MinEntryCount = 4;
-    private const int ExpectedColumnCount = 5;
 
     public List<VocabularyEntry> Read(Stream stream)
     {
-        using var parser = new TextFieldParser(
-            stream, System.Text.Encoding.UTF8,
-            detectEncoding: true, leaveOpen: true);
+        var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            TrimOptions = TrimOptions.Trim,
+            MissingFieldFound = null
+        };
 
-        parser.TextFieldType = FieldType.Delimited;
-        parser.SetDelimiters(",");
-        parser.HasFieldsEnclosedInQuotes = true;
+        using var reader = new StreamReader(stream);
+        using var csv = new CsvReader(reader, config);
+        csv.Context.RegisterClassMap<VocabularyEntryMap>();
 
-        var entries = new List<VocabularyEntry>();
-
+        List<VocabularyEntry> entries;
         try
         {
-            var header = parser.ReadFields();
-            int rowNumber = 1;
-
-            while (!parser.EndOfData)
-            {
-                rowNumber++;
-                var fields = parser.ReadFields();
-
-                if (fields is not { Length: ExpectedColumnCount })
-                {
-                    continue;
-                }
-
-                if (string.IsNullOrWhiteSpace(fields[0]) || string.IsNullOrWhiteSpace(fields[1]))
-                {
-                    throw new InvalidDataException(
-                        $"Row {rowNumber} is missing the word or translation.");
-                }
-
-                var entry = new VocabularyEntry(fields[0], fields[1], fields[2], fields[3], fields[4]);
-                entries.Add(entry);
-            }
+            entries = csv.GetRecords<VocabularyEntry>().ToList();
         }
-        catch (MalformedLineException ex)
+        catch (HeaderValidationException ex)
+        {
+            throw new InvalidDataException(
+                "CSV is missing required columns (word, translation, explanation, example, type).", ex);
+        }
+        catch (CsvHelperException ex)
         {
             throw new InvalidDataException("CSV file is malformed.", ex);
         }
 
+        for (int i = 0; i < entries.Count; i++)
+        {
+            var entry = entries[i];
+            if (string.IsNullOrWhiteSpace(entry.Word) || string.IsNullOrWhiteSpace(entry.Translation))
+            {
+                throw new InvalidDataException(
+                    $"Row {i + 2} is missing the word or translation.");
+            }
+        }
+
         if (entries.Count == 0)
         {
-            throw new InvalidDataException(
-                $"CSV file is empty or malformed. Expected {ExpectedColumnCount} columns per row.");
+            throw new InvalidDataException("CSV file is empty.");
         }
 
         if (entries.Count < MinEntryCount)
@@ -65,4 +61,4 @@ public class CsvVocabularyImporter
 
         return entries;
     }
- }
+}

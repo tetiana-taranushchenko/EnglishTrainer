@@ -1,5 +1,8 @@
+@using EnglishTrainer.Data
 @using EnglishTrainer.Models
 @using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.JSInterop
+@inject IJSRuntime JS
 
 @{
     var correctAnswers = Answers.Where(answer => answer.IsCorrect).ToArray();
@@ -20,6 +23,13 @@
             <button type="button" class="summary-restart" @onclick="OnRestart">
                 Practice these words again <span aria-hidden="true">→</span>
             </button>
+
+            @if (ReviewEntries.Length > 0)
+            {
+                <button type="button" class="summary-download" @onclick="DownloadReview">
+                    Download review (@ReviewEntries.Length)
+                </button>
+            }
 
             <label class="summary-upload">
                 Upload word list
@@ -98,5 +108,23 @@
     private Task HandleUpload(InputFileChangeEventArgs args)
     {
         return OnCsvSelected.InvokeAsync(args.File);
+    }
+
+    private VocabularyEntry[] ReviewEntries =>
+        Answers
+            .Where(answer => !answer.IsCorrect)
+            .Select(answer => new VocabularyEntry(
+                word: answer.Question.CorrectAnswer,
+                translation: answer.Question.PromptText,
+                explanation: answer.Question.Explanation ?? "",
+                example: answer.Question.Example ?? "",
+                partOfSpeech: answer.Question.PartOfSpeech))
+            .ToArray();
+
+    private async Task DownloadReview()
+    {
+        var csv = new CsvVocabularyExporter().Write(ReviewEntries);
+        var fileName = $"words-to-review-{DateTime.Now:yyyyMMdd-HHmm}.csv";
+        await JS.InvokeVoidAsync("downloadCsv", fileName, csv);
     }
 }

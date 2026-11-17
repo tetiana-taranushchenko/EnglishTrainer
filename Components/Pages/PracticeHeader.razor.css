@@ -7,6 +7,7 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px 20px;
+    margin-bottom: 32px;
 }
 
 .practice-header h1 {
@@ -14,9 +15,10 @@
     align-items: center;
     min-height: var(--header-control-height);
     margin: 0;
-    color: #17223a;
-    font-size: 1.5rem;
-    font-weight: 700;
+    color: #526078;
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
     line-height: 1.2;
 }
 

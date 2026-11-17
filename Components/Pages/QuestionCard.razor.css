@@ -85,7 +85,7 @@
     min-width: 0;
     overflow-wrap: anywhere;
     line-height: 1.2;
-    min-block-size: 2.4em;
+    min-block-size: 1.6em;
 }
 
 .question-heading .part-of-speech {

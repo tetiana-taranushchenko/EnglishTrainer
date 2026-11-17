@@ -53,7 +53,8 @@
 }
 
 .summary-restart,
-.summary-upload {
+.summary-upload,
+.summary-download {
     box-sizing: border-box;
     display: inline-flex;
     align-items: center;
@@ -68,6 +69,7 @@
     text-align: center;
     cursor: pointer;
     transition: background-color 150ms ease;
+    white-space: nowrap;
 }
 
 .summary-restart {
@@ -208,4 +210,17 @@
         padding-inline-end: 0;
         overflow: visible;
     }
+}
+.summary-download {
+    background: #fff;
+    color: #4d3db4;
+}
+
+.summary-download:hover {
+    background: #f3f0ff;
+}
+
+.summary-download:focus-visible {
+    outline: 2px solid #4d3db4;
+    outline-offset: 3px;
 }
