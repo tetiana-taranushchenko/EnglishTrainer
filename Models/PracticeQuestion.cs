@@ -12,14 +12,24 @@ public class PracticeQuestion
     public string PartOfSpeech { get; }
     public string[] Options { get; }
     public string CorrectAnswer { get; }
+    public string PromptLanguage { get; }
+    public string OptionsLanguage { get; }
     public string? Explanation { get; set; }
     public string? Example { get; set; }
-    
-    public PracticeQuestion(string promptText, string partOfSpeech, string[] options, string correctAnswer)
+
+    public PracticeQuestion(
+        string promptText,
+        string partOfSpeech,
+        string[] options,
+        string correctAnswer,
+        string promptLanguage = "uk",
+        string optionsLanguage = "en")
     {
         PromptText = promptText;
         PartOfSpeech = partOfSpeech;
         Options = options;
         CorrectAnswer = correctAnswer;
+        PromptLanguage = promptLanguage;
+        OptionsLanguage = optionsLanguage;
     }
 }

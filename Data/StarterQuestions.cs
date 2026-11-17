@@ -15,13 +15,17 @@ public class StarterQuestions
                     "reliable",
                     "adjective",
                     ["навмисний", "надійний", "потребує багато часу", "гнучкий"],
-                    "надійний"
+                    "надійний",
+                    promptLanguage: "en",
+                    optionsLanguage: "uk"
                 ),
                 new PracticeQuestion(
                     "contemplate",
                     "verb",
                     ["проводити", "підтримувати", "пропонувати", "розмірковувати"],
-                    "розмірковувати"
+                    "розмірковувати",
+                    promptLanguage: "en",
+                    optionsLanguage: "uk"
                 )
             ];
         }
@@ -32,13 +36,17 @@ public class StarterQuestions
                 "надійний",
                 "adjective",
                 ["intentional", "reliable", "time-consuming", "flexible"],
-                "reliable"
+                "reliable",
+                promptLanguage: "uk",
+                optionsLanguage: "en"
             ),
             new PracticeQuestion(
                 "розмірковувати",
                 "verb",
                 ["conduct", "maintain", "suggest", "contemplate"],
-                "contemplate"
+                "contemplate",
+                promptLanguage: "uk",
+                optionsLanguage: "en"
             )
         ];
     }

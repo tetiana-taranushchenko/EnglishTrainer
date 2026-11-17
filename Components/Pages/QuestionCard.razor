@@ -1,7 +1,7 @@
 @using EnglishTrainer.Models
 
 <div class="question-heading">
-    <h2 lang="uk">@Question.PromptText</h2>
+    <h2 lang="@Question.PromptLanguage">@Question.PromptText</h2>
     <span class="part-of-speech">@Question.PartOfSpeech</span>
 </div>
 
@@ -22,7 +22,7 @@
                 class="answer-option @answerClass"
                 @onclick="() => OnAnswerSelected.InvokeAsync(option)"
                 disabled="@(IsCorrect.HasValue)">
-            <span>@option</span>
+            <span lang="@Question.OptionsLanguage">@option</span>
             <span class="answer-icon" aria-hidden="true">
                 @if (answerClass == "answer-correct")
                 {

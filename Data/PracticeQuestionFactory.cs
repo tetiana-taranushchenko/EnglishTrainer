@@ -13,10 +13,18 @@ public class PracticeQuestionFactory
 
         string promptText = useUkrainianOptions ? entry.Word : entry.Translation;
         string correctAnswer = useUkrainianOptions ? entry.Translation : entry.Word;
+        string promptLanguage = useUkrainianOptions ? "en" : "uk";
+        string optionsLanguage = useUkrainianOptions ? "uk" : "en";
 
         var options = GenerateOptions(entry, entries, correctAnswer, useUkrainianOptions);
 
-        return new PracticeQuestion(promptText, entry.PartOfSpeech, options, correctAnswer)
+        return new PracticeQuestion(
+            promptText,
+            entry.PartOfSpeech,
+            options,
+            correctAnswer,
+            promptLanguage,
+            optionsLanguage)
         {
             Explanation = entry.Explanation,
             Example = entry.Example
