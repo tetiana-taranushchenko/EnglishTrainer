@@ -1,0 +1,119 @@
+.toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    min-width: 18rem;
+    max-width: 24rem;
+    padding: 0.875rem 1rem;
+
+    background: #ffffff;
+    border-radius: 0.75rem;
+    border-left: 4px solid currentColor;
+    box-shadow: 0 10px 30px rgba(15, 15, 40, 0.12),
+                0 2px 6px rgba(15, 15, 40, 0.08);
+
+    font-size: 0.95rem;
+    line-height: 1.4;
+
+    animation: toast-in 0.25s ease-out both;
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.75rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.toast--error {
+    color: #b42318;
+}
+
+.toast--info {
+    color: #1e4fb8;
+}
+
+.toast-icon {
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1;
+
+    color: #ffffff;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.toast-icon::before {
+    content: "";
+}
+
+.toast--error .toast-icon,
+.toast--info .toast-icon {
+    position: relative;
+}
+
+.toast--error .toast-icon {
+    color: #b42318;
+}
+
+.toast--info .toast-icon {
+    color: #1e4fb8;
+}
+
+.toast-message {
+    flex: 1;
+    color: #1f2a44;
+}
+
+.toast-close {
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    border: none;
+    border-radius: 0.5rem;
+    color: #6b7280;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.toast-close:hover,
+.toast-close:focus-visible {
+    background: rgba(15, 15, 40, 0.06);
+    color: #1f2a44;
+    outline: none;
+}
+
+@media (max-width: 480px) {
+    .toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        min-width: 0;
+        max-width: none;
+    }
+}

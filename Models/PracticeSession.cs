@@ -13,6 +13,13 @@ public class PracticeSession
     
     public PracticeSession(PracticeQuestion[] questions)
     {
+        ArgumentNullException.ThrowIfNull(questions);
+
+        if (questions.Length == 0)
+        {
+            throw new ArgumentException("Practice session requires at least one question.", nameof(questions));
+        }
+
         _questions = questions;
     }
     

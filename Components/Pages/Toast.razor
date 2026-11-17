@@ -1,0 +1,62 @@
+@implements IDisposable
+
+@if (_visibleMessage is not null)
+{
+    <div class="toast toast--@Severity.ToString().ToLowerInvariant()" role="alert" aria-live="assertive">
+        <span class="toast-icon" aria-hidden="true">
+            @(Severity == ToastSeverity.Error ? "!" : "i")
+        </span>
+        <span class="toast-message">@_visibleMessage</span>
+        <button type="button" class="toast-close" aria-label="Dismiss notification" @onclick="Dismiss">×</button>
+    </div>
+}
+
+@code {
+    public enum ToastSeverity { Error, Info }
+
+    [Parameter] public string? Message { get; set; }
+    [Parameter] public ToastSeverity Severity { get; set; } = ToastSeverity.Error;
+    [Parameter] public int DurationMs { get; set; } = 5000;
+    [Parameter] public EventCallback OnDismiss { get; set; }
+
+    private string? _visibleMessage;
+    private CancellationTokenSource? _cts;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Message == _visibleMessage)
+        {
+            return;
+        }
+
+        _cts?.Cancel();
+        _visibleMessage = Message;
+
+        if (_visibleMessage is null)
+        {
+            return;
+        }
+
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+
+        try
+        {
+            await Task.Delay(DurationMs, token);
+            await Dismiss();
+        }
+        catch (TaskCanceledException) { }
+    }
+
+    private async Task Dismiss()
+    {
+        _visibleMessage = null;
+        await OnDismiss.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+    }
+}

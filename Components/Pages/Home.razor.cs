@@ -1,11 +1,14 @@
 using EnglishTrainer.Data;
 using EnglishTrainer.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
 namespace EnglishTrainer.Components.Pages;
 
 public partial class Home
 {
+    [Inject] public ILogger<Home> Logger { get; set; } = default!;
+
     private PracticeSession _session = new(StarterQuestions.Create());
     private PracticeQuestion[]? _importedQuestions;
     private List<VocabularyEntry>? _importedEntries;
@@ -13,6 +16,7 @@ public partial class Home
     private string? _selectedAnswer;
     private bool _isComplete;
     private PracticeDirection _direction = PracticeDirection.UkrainianToEnglish;
+    private string? _errorMessage;
         
     private void SelectAnswer(string option)
     {
@@ -26,28 +30,57 @@ public partial class Home
     
     private async Task HandleCsvSelected(IBrowserFile file)
     {
-        using var browserStream = file.OpenReadStream();
-        using var csvStream = new MemoryStream();
+        _errorMessage = null;
 
-        await browserStream.CopyToAsync(csvStream);
-        csvStream.Position = 0;
-
-        var entries = new CsvVocabularyImporter().Read(csvStream);
-        if (entries.Count == 0)
+        if (!file.Name.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
         {
+            Logger.LogWarning("Rejected upload {FileName}: wrong extension.", file.Name);
+            _errorMessage = "Please upload a file with a .csv extension.";
             return;
         }
 
-        var factory = new PracticeQuestionFactory();
-        var questions = entries.Select(entry => factory.Create(entry, entries, _direction))
-            .ToArray();
+        try
+        {
+            using var browserStream = file.OpenReadStream(CsvVocabularyImporter.MaxSizeBytes);
+            using var csvStream = new MemoryStream();
 
-        _importedEntries = entries;
-        _importedQuestions = questions;
-        _session = new PracticeSession(questions);
-        _isCorrect = null;
-        _selectedAnswer = null;
-        _isComplete = false;    }
+            await browserStream.CopyToAsync(csvStream);
+            csvStream.Position = 0;
+
+            var entries = new CsvVocabularyImporter().Read(csvStream);
+
+            var factory = new PracticeQuestionFactory();
+            var questions = entries.Select(entry => factory.Create(entry, entries, _direction))
+                .ToArray();
+
+            _importedEntries = entries;
+            _importedQuestions = questions;
+            _session = new PracticeSession(questions);
+            _isCorrect = null;
+            _selectedAnswer = null;
+            _isComplete = false;
+
+            Logger.LogInformation(
+                "CSV import succeeded for {FileName}: {EntryCount} entries, direction {Direction}.",
+                file.Name, entries.Count, _direction);
+        }
+        catch (IOException ex)
+        {
+            var maxMb = CsvVocabularyImporter.MaxSizeBytes / 1024 / 1024;
+            Logger.LogWarning(ex, "Rejected upload {FileName}: exceeds {MaxMb} MB limit.", file.Name, maxMb);
+            _errorMessage = $"This file is too large. The maximum size is {maxMb} MB.";
+        }
+        catch (InvalidDataException ex)
+        {
+            Logger.LogWarning(ex, "Rejected upload {FileName}: invalid CSV content.", file.Name);
+            _errorMessage = ex.Message;
+        }
+        catch (InvalidOperationException ex)
+        {
+            Logger.LogError(ex, "Failed to build practice session from {FileName}.", file.Name);
+            _errorMessage = "Could not build a practice session from this file. Please check the content.";
+        }
+    }
         
     private void GoToNextQuestion()
     {
