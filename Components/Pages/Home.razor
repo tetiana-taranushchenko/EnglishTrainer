@@ -9,11 +9,16 @@
     <section class="practice-card">
         @if (_isComplete) 
         {
-            <PracticeSummary OnRestart="RestartPractice" />
+            <PracticeSummary Answers="@_session.Answers"
+                             OnRestart="RestartPractice"
+                             OnCsvSelected="HandleCsvSelected" />
         }
         else
         {
-            <PracticeHeader OnCsvSelected="HandleCsvSelected" />
+            <PracticeHeader OnCsvSelected="HandleCsvSelected"
+                            Direction="@_direction"
+                            CanSwitchDirection="@CanSwitchDirection"
+                            OnDirectionSwitch="SwitchDirection" />
             @if (_importedQuestions is not null)
             {
                 <QuestionCard Question="@_session.CurrentQuestion"
@@ -24,7 +29,11 @@
                 <AnswerFooter IsCorrect="@_isCorrect"
                               CorrectAnswer="@_session.CurrentQuestion.CorrectAnswer"
                               OnNext="GoToNextQuestion" 
-                              Example="@_session.CurrentQuestion.Example"/>
+                              Example="@_session.CurrentQuestion.Example"
+                              TotalQuestions="@_session.TotalQuestions"
+                              CorrectCount="@_session.CorrectCount"
+                              IncorrectCount="@_session.IncorrectCount"
+                              />
             }
         }
     </section>

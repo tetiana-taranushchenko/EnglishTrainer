@@ -19,7 +19,7 @@
     grid-template-columns: 1.25rem minmax(0, 1fr) 1.25rem;
     align-items: center;
     gap: 8px;
-    min-height: 52px;
+    min-height: 64px;
     padding: 10px 14px;
     border: 1px solid #d5dbea;
     border-radius: 10px;
@@ -84,6 +84,8 @@
     margin: 0;
     min-width: 0;
     overflow-wrap: anywhere;
+    line-height: 1.2;
+    min-block-size: 2.4em;
 }
 
 .question-heading .part-of-speech {
@@ -143,6 +145,20 @@
 
 .explanation[open] .explanation-toggle::after {
     transform: rotate(135deg);
+}
+
+.explanation > summary {
+    cursor: pointer;
+    transition: background-color 150ms ease;
+}
+
+.explanation > summary:hover {
+    background-color: #f3f0ff;
+}
+
+.explanation > summary:focus-visible {
+    outline: 2px solid #4d3db4;
+    outline-offset: 3px;
 }
 
 .hide-label,

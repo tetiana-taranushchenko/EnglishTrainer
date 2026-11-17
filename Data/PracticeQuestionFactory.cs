@@ -4,52 +4,63 @@ namespace EnglishTrainer.Data;
 
 public class PracticeQuestionFactory
 {
-    public PracticeQuestion Create(VocabularyEntry entry, List<VocabularyEntry> entries)
+    public PracticeQuestion Create(
+        VocabularyEntry entry,
+        List<VocabularyEntry> entries,
+        PracticeDirection direction = PracticeDirection.UkrainianToEnglish)
     {
-        var options = GenerateOptions(entry, entries);
-        return new PracticeQuestion(
-            entry.Translation,
-            entry.PartOfSpeech,
-            options,
-            entry.Word)
+        bool useUkrainianOptions = direction == PracticeDirection.EnglishToUkrainian;
+
+        string promptText = useUkrainianOptions ? entry.Word : entry.Translation;
+        string correctAnswer = useUkrainianOptions ? entry.Translation : entry.Word;
+
+        var options = GenerateOptions(entry, entries, correctAnswer, useUkrainianOptions);
+
+        return new PracticeQuestion(promptText, entry.PartOfSpeech, options, correctAnswer)
         {
             Explanation = entry.Explanation,
             Example = entry.Example
         };
     }
-    
-    private string[] GenerateOptions(VocabularyEntry entry, List<VocabularyEntry> entries)
+
+    private string[] GenerateOptions(
+        VocabularyEntry entry,
+        List<VocabularyEntry> entries,
+        string correctAnswer,
+        bool useUkrainianOptions)
     {
         var candidates = entries
-            .Where(e => e.PartOfSpeech == entry.PartOfSpeech)
-            .Select(e => e.Word)
-            .Where(word => word != entry.Word)
+            .Where(vocabularyEntry => vocabularyEntry.PartOfSpeech == entry.PartOfSpeech)
+            .Select(vocabularyEntry => useUkrainianOptions
+                ? vocabularyEntry.Translation
+                : vocabularyEntry.Word)
+            .Where(answer => answer != correctAnswer)
             .Distinct()
             .ToArray();
 
         Random.Shared.Shuffle(candidates);
-        var otherWords = candidates.Take(3).ToList();
+        var otherAnswers = candidates.Take(3).ToList();
 
-        if (otherWords.Count < 3)
+        if (otherAnswers.Count < 3)
         {
-            int missingCount = 3 - otherWords.Count;
+            int missingCount = 3 - otherAnswers.Count;
 
-            var fallbackWords = entries
-                .Select(candidate => candidate.Word)
-                .Where(word => word != entry.Word && !otherWords.Contains(word))
+            var fallbackAnswers = entries
+                .Select(candidate => useUkrainianOptions ? candidate.Translation : candidate.Word)
+                .Where(answer => answer != correctAnswer && !otherAnswers.Contains(answer))
                 .Distinct()
                 .ToArray();
 
-            Random.Shared.Shuffle(fallbackWords);
-            otherWords.AddRange(fallbackWords.Take(missingCount));
-        }
-        
-        if (otherWords.Count < 3)
-        {
-            throw new InvalidOperationException("At least four distinct words are required.");
+            Random.Shared.Shuffle(fallbackAnswers);
+            otherAnswers.AddRange(fallbackAnswers.Take(missingCount));
         }
 
-        string[] options = [entry.Word, .. otherWords];
+        if (otherAnswers.Count < 3)
+        {
+            throw new InvalidOperationException("At least four distinct answers are required.");
+        }
+
+        string[] options = [correctAnswer, .. otherAnswers];
         Random.Shared.Shuffle(options);
 
         return options;

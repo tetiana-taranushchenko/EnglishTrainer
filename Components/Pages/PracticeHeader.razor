@@ -1,20 +1,37 @@
+@using EnglishTrainer.Models
 @using Microsoft.AspNetCore.Components.Forms
 
 <header class="practice-header">
     <h1>English Trainer</h1>
 
-    <div class="csv-upload">
-        <label class="csv-picker">
-            <span>Choose File</span>
-            <InputFile OnChange="SelectCsv" accept=".csv" />
-        </label>
+    <div class="practice-header-actions">
+        <div class="practice-direction">
+            <span>
+                @(Direction == PracticeDirection.UkrainianToEnglish ? "UA → EN" : "EN → UA")
+            </span>
 
-        <p class="csv-file-name" role="status">
-            @if (_fileName is not null)
-            {
-                <span title="@_fileName">@_fileName</span>
-            }
-        </p>
+            <button type="button"
+                    class="direction-swap"
+                    aria-label="Switch practice direction"
+                    @onclick="OnDirectionSwitch"
+                    disabled="@(!CanSwitchDirection)">
+                ⇄
+            </button>
+        </div>
+
+        <div class="csv-upload">
+            <label class="csv-picker">
+                <span>Upload word list</span>
+                <InputFile OnChange="SelectCsv" accept=".csv" />
+            </label>
+
+            <p class="csv-file-name" role="status">
+                @if (_fileName is not null)
+                {
+                    <span title="@_fileName">@_fileName</span>
+                }
+            </p>
+        </div>
     </div>
 </header>
 
@@ -22,7 +39,15 @@
     private string? _fileName;
 
     [Parameter]
+    public PracticeDirection Direction { get; set; } =
+        PracticeDirection.UkrainianToEnglish;
+    [Parameter]
     public EventCallback<IBrowserFile> OnCsvSelected { get; set; }
+    [Parameter]
+    public bool CanSwitchDirection { get; set; }
+
+    [Parameter]
+    public EventCallback OnDirectionSwitch { get; set; }
 
     private async Task SelectCsv(InputFileChangeEventArgs args)
     {

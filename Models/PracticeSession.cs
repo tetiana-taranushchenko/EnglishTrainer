@@ -2,9 +2,14 @@ namespace EnglishTrainer.Models;
 
 public class PracticeSession
 {
-    PracticeQuestion[] _questions;
+    private readonly PracticeQuestion[] _questions;
     private int _currentQuestionIndex = 0;
     public PracticeQuestion CurrentQuestion => _questions[_currentQuestionIndex];
+    private readonly List<PracticeAnswer> _answers = new();
+    public int TotalQuestions => _questions.Length;
+    public int CorrectCount => _answers.Count(answer => answer.IsCorrect);
+    public int IncorrectCount => _answers.Count - CorrectCount;
+    public IReadOnlyList<PracticeAnswer> Answers => _answers.AsReadOnly();
     
     public PracticeSession(PracticeQuestion[] questions)
     {
@@ -24,6 +29,14 @@ public class PracticeSession
             return true;
         }
         return false;
+    }
+    
+    public bool SubmitAnswer(string selectedAnswer)
+    {
+        var isCorrect = IsCorrectAnswer(selectedAnswer);
+        var answer = new PracticeAnswer(CurrentQuestion, selectedAnswer, isCorrect);
+        _answers.Add(answer);
+        return isCorrect;
     }
     
 }

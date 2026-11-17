@@ -1,17 +1,23 @@
 namespace EnglishTrainer.Models;
 
+public enum PracticeDirection
+{
+    UkrainianToEnglish,
+    EnglishToUkrainian
+}
+
 public class PracticeQuestion
 {
-    public string UkrainianText { get; set; }
-    public string PartOfSpeech { get; set; }
-    public string[] Options { get; set; }
-    public string CorrectAnswer { get; set; }
+    public string PromptText { get; }
+    public string PartOfSpeech { get; }
+    public string[] Options { get; }
+    public string CorrectAnswer { get; }
     public string? Explanation { get; set; }
     public string? Example { get; set; }
     
-    public PracticeQuestion(string ukrainianText, string partOfSpeech, string[] options, string correctAnswer)
+    public PracticeQuestion(string promptText, string partOfSpeech, string[] options, string correctAnswer)
     {
-        UkrainianText = ukrainianText;
+        PromptText = promptText;
         PartOfSpeech = partOfSpeech;
         Options = options;
         CorrectAnswer = correctAnswer;

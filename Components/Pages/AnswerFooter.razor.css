@@ -69,3 +69,52 @@
     color: #625d75;
     cursor: default;
 }
+
+.answer-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.875rem;
+}
+
+.answer-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    white-space: nowrap;
+}
+
+.answer-count strong {
+    min-inline-size: 2ch;
+    text-align: end;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.answer-count--total {
+    background: #eeebfa;
+    color: #4939a5;
+}
+
+.answer-count--correct {
+    background: #eaf7ef;
+    color: #185735;
+}
+
+.answer-count--incorrect {
+    background: #fceeee;
+    color: #8b2525;
+}
+
+.footer-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.footer-actions .next-button {
+    margin-inline-start: auto;
+}

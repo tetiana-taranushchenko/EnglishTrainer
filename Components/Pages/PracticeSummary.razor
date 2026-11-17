@@ -1,9 +1,102 @@
-        <h1>Practice Complete</h1>
-        <p class="instruction">You have completed the practice session.</p>
-        <button type="button" class="restart-button" @onclick="OnRestart">
-            Start again
-        </button>
+@using EnglishTrainer.Models
+@using Microsoft.AspNetCore.Components.Forms
 
-        @code {
-            [Parameter] public EventCallback OnRestart { get; set; }
-        }
+@{
+    var correctAnswers = Answers.Where(answer => answer.IsCorrect).ToArray();
+    var answersToReview = Answers.Where(answer => !answer.IsCorrect).ToArray();
+}
+
+<div class="practice-summary">
+    <header class="summary-header">
+        <h1>Practice Complete</h1>
+        <p class="summary-score">@correctAnswers.Length of @Answers.Count correct</p>
+
+        <progress class="summary-progress"
+                  aria-label="Correct answers"
+                  value="@correctAnswers.Length"
+                  max="@Math.Max(1, Answers.Count)"></progress>
+
+        <div class="summary-actions">
+            <button type="button" class="summary-restart" @onclick="OnRestart">
+                Practice these words again <span aria-hidden="true">→</span>
+            </button>
+
+            <label class="summary-upload">
+                Upload word list
+                <InputFile OnChange="HandleUpload" accept=".csv,text/csv" />
+            </label>
+        </div>
+    </header>
+
+    <div class="summary-results" role="region" aria-label="Answer breakdown" tabindex="0">
+        <section class="summary-group summary-group--correct">
+            <h2>Correct (@correctAnswers.Length)</h2>
+
+            @if (correctAnswers.Length == 0)
+            {
+                <p class="summary-empty">No correct answers this time.</p>
+            }
+            else
+            {
+                <ul class="summary-list summary-list--correct" role="list">
+                    @foreach (var answer in correctAnswers)
+                    {
+                        <li>
+                            <span class="summary-check" aria-hidden="true">✓</span>
+                            <span>
+                                @answer.Question.PromptText →
+                                <strong>@answer.Question.CorrectAnswer</strong>
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+
+        <section class="summary-group summary-group--review">
+            <h2>To review (@answersToReview.Length)</h2>
+
+            @if (answersToReview.Length == 0)
+            {
+                <p class="summary-empty">No words to review.</p>
+            }
+            else
+            {
+                <ul class="summary-list summary-list--review" role="list">
+                    @foreach (var answer in answersToReview)
+                    {
+                        <li>
+                            <strong class="summary-prompt">@answer.Question.PromptText</strong>
+
+                            <div class="summary-answer">
+                                <span class="summary-check" aria-hidden="true">✓</span>
+                                <span><strong>@answer.Question.CorrectAnswer</strong></span>
+                            </div>
+
+                            <div class="summary-answer">
+                                <span class="summary-cross" aria-hidden="true">×</span>
+                                <span>@answer.SelectedAnswer</span>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+        </section>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<PracticeAnswer> Answers { get; set; } = [];
+
+    [Parameter]
+    public EventCallback OnRestart { get; set; }
+
+    [Parameter]
+    public EventCallback<IBrowserFile> OnCsvSelected { get; set; }
+
+    private Task HandleUpload(InputFileChangeEventArgs args)
+    {
+        return OnCsvSelected.InvokeAsync(args.File);
+    }
+}

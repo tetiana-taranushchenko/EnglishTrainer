@@ -1,0 +1,11 @@
+word,translation,explanation,example,type
+circumstance,обставина,A fact or condition that affects a situation.,A change in the deployment schedule was the only circumstance that delayed the release.,noun
+contemplate,обмірковувати; розглядати,To think carefully about a possible action.,The team began to contemplate a complete rewrite of the legacy code.,verb
+conduct,проводити; вести,To organize and carry out an activity.,The team needs to conduct a thorough code review.,verb
+triage,сортування; визначення пріоритетів; визначати пріоритети,"To sort items by urgency, or the process of doing so.",We need to triage these bugs before the next sprint.,noun/verb
+submission,подання; відправка даних,"The act of sending something for review or processing, or the item sent.",Please check your form submission for any errors.,noun
+severity,серйозність; ступінь критичності,How serious a problem or its effects are.,The team raised the severity of the bug after it caused data loss.,noun
+reliable,надійний,Able to work consistently as expected.,We need a reliable server to host our database.,adjective
+reliability,надійність,The ability to work consistently as expected over time.,System reliability is our top priority this quarter.,noun
+maintain,підтримувати; обслуговувати,To keep something working properly over time.,It is difficult to maintain code without documentation.,verb
+maintenance,обслуговування,Work done to keep a system or piece of equipment functioning.,Scheduled maintenance will happen this Sunday.,noun

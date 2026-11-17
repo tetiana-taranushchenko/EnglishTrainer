@@ -20,19 +20,36 @@
         </div>
     }
 
-    <button type="button"
-            class="next-button"
-            @onclick="OnNext"
-            disabled="@(!IsCorrect.HasValue)">
-        Next
-    </button>
+    <div class="footer-actions">
+        <div class="answer-counts">
+            <span class="answer-count answer-count--total">
+                Total <strong>@TotalQuestions</strong>
+            </span>
+            <span class="answer-count answer-count--correct">
+                Correct <strong>@CorrectCount</strong>
+            </span>
+            <span class="answer-count answer-count--incorrect">
+                Incorrect <strong>@IncorrectCount</strong>
+            </span>
+        </div>
+        <button type="button"
+                class="next-button"
+                @ref="_nextButton"
+                @onclick="OnNext"
+                disabled="@(!IsCorrect.HasValue)">
+            Next
+        </button>
+    </div>  
 </div>
 
-@code {
+    @code {
     [Parameter] public bool? IsCorrect { get; set; }
     [Parameter] public string CorrectAnswer { get; set; } = string.Empty;
     [Parameter] public string? Example { get; set; }
     [Parameter] public EventCallback OnNext { get; set; }
+    [Parameter] public int TotalQuestions { get; set; }
+    [Parameter] public int CorrectCount { get; set; }
+    [Parameter] public int IncorrectCount { get; set; }
     
     private string[] GetExampleParts()
     {
@@ -47,5 +64,20 @@
         return System.Text.RegularExpressions.Regex.Split(
             text,
             $@"(?i)(?<!\w)({answer})(?!\w)");
+    }
+    
+    private ElementReference _nextButton;
+    private bool _wasAnswered;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var isAnswered = IsCorrect.HasValue;
+        var shouldFocusNext = isAnswered && !_wasAnswered;
+        _wasAnswered = isAnswered;
+
+        if (shouldFocusNext)
+        {
+            await _nextButton.FocusAsync();
+        }
     }
 }
