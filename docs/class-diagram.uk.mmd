@@ -1,0 +1,94 @@
+classDiagram
+    direction LR
+
+    class PracticeDirection {
+        <<enumeration>>
+        UkrainianToEnglish
+        EnglishToUkrainian
+    }
+
+    class VocabularyEntry {
+        +string Word
+        +string Translation
+        +string Explanation
+        +string Example
+        +string PartOfSpeech
+        +VocabularyEntry()
+        +VocabularyEntry(word, translation, explanation, example, partOfSpeech)
+    }
+
+    class PracticeQuestion {
+        +string PromptText
+        +string PartOfSpeech
+        +string[] Options
+        +string CorrectAnswer
+        +string PromptLanguage
+        +string OptionsLanguage
+        +string? Explanation
+        +string? Example
+        +string? EnglishWord
+        +PracticeQuestion(promptText, partOfSpeech, options, correctAnswer, promptLanguage, optionsLanguage)
+    }
+
+    class PracticeAnswer {
+        +PracticeQuestion Question
+        +string SelectedAnswer
+        +bool IsCorrect
+        +PracticeAnswer(question, selectedAnswer, isCorrect)
+    }
+
+    class PracticeSession {
+        -PracticeQuestion[] _questions
+        -int _currentQuestionIndex
+        -List~PracticeAnswer~ _answers
+        +PracticeQuestion CurrentQuestion
+        +int TotalQuestions
+        +int CorrectCount
+        +int IncorrectCount
+        +IReadOnlyList~PracticeAnswer~ Answers
+        +PracticeSession(questions)
+        +IsCorrectAnswer(answer) bool
+        +MoveNext() bool
+        +SubmitAnswer(selectedAnswer) bool
+    }
+
+    class CsvVocabularyImporter {
+        +const long MaxSizeBytes
+        +const int MinEntryCount
+        +Read(Stream stream) List~VocabularyEntry~
+    }
+
+    class CsvVocabularyExporter {
+        +Write(IEnumerable~VocabularyEntry~ entries) string
+    }
+
+    class VocabularyEntryMap {
+        <<CsvHelper ClassMap>>
+        +VocabularyEntryMap()
+    }
+
+    class PracticeQuestionFactory {
+        +const int OptionsPerQuestion
+        +Create(entry, entries, direction) PracticeQuestion
+        -GenerateOptions(entry, entries, correctAnswer, useUkrainianOptions) string[]
+    }
+
+    class StarterQuestions {
+        +Create(direction)$ PracticeQuestion[]
+    }
+
+    PracticeAnswer --> PracticeQuestion : містить
+    PracticeSession "1" o-- "*" PracticeQuestion : агрегація
+    PracticeSession "1" *-- "*" PracticeAnswer : композиція
+
+    CsvVocabularyImporter ..> VocabularyEntry : створює
+    CsvVocabularyImporter ..> VocabularyEntryMap : використовує
+    CsvVocabularyExporter ..> VocabularyEntry : читає
+    CsvVocabularyExporter ..> VocabularyEntryMap : використовує
+    VocabularyEntryMap ..> VocabularyEntry : мапить
+
+    PracticeQuestionFactory ..> VocabularyEntry : використовує
+    PracticeQuestionFactory ..> PracticeQuestion : створює
+    PracticeQuestionFactory ..> PracticeDirection : використовує
+    StarterQuestions ..> PracticeQuestion : створює
+    StarterQuestions ..> PracticeDirection : використовує

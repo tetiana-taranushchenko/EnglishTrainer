@@ -4,6 +4,9 @@ namespace EnglishTrainer.Data;
 
 public class PracticeQuestionFactory
 {
+    public const int OptionsPerQuestion = 4;
+    private const int OtherAnswersPerQuestion = OptionsPerQuestion - 1;
+
     public PracticeQuestion Create(
         VocabularyEntry entry,
         List<VocabularyEntry> entries,
@@ -27,7 +30,8 @@ public class PracticeQuestionFactory
             optionsLanguage)
         {
             Explanation = entry.Explanation,
-            Example = entry.Example
+            Example = entry.Example,
+            EnglishWord = entry.Word
         };
     }
 
@@ -47,11 +51,11 @@ public class PracticeQuestionFactory
             .ToArray();
 
         Random.Shared.Shuffle(candidates);
-        var otherAnswers = candidates.Take(3).ToList();
+        var otherAnswers = candidates.Take(OtherAnswersPerQuestion).ToList();
 
-        if (otherAnswers.Count < 3)
+        if (otherAnswers.Count < OtherAnswersPerQuestion)
         {
-            int missingCount = 3 - otherAnswers.Count;
+            int missingCount = OtherAnswersPerQuestion - otherAnswers.Count;
 
             var fallbackAnswers = entries
                 .Select(candidate => useUkrainianOptions ? candidate.Translation : candidate.Word)
@@ -63,9 +67,10 @@ public class PracticeQuestionFactory
             otherAnswers.AddRange(fallbackAnswers.Take(missingCount));
         }
 
-        if (otherAnswers.Count < 3)
+        if (otherAnswers.Count < OtherAnswersPerQuestion)
         {
-            throw new InvalidOperationException("At least four distinct answers are required.");
+            throw new InvalidOperationException(
+                $"At least {OptionsPerQuestion} distinct answers are required.");
         }
 
         string[] options = [correctAnswer, .. otherAnswers];

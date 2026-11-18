@@ -8,7 +8,7 @@ namespace EnglishTrainer.Data;
 public class CsvVocabularyImporter
 {
     public const long MaxSizeBytes = 5 * 1024 * 1024;
-    public const int MinEntryCount = 4;
+    public const int MinEntryCount = PracticeQuestionFactory.OptionsPerQuestion;
 
     public List<VocabularyEntry> Read(Stream stream)
     {

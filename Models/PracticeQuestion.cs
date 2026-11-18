@@ -16,6 +16,7 @@ public class PracticeQuestion
     public string OptionsLanguage { get; }
     public string? Explanation { get; set; }
     public string? Example { get; set; }
+    public string? EnglishWord { get; set; }
 
     public PracticeQuestion(
         string promptText,

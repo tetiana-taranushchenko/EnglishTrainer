@@ -20,10 +20,20 @@
         </div>
 
         <div class="csv-upload">
-            <label class="csv-picker">
-                <span>Upload word list</span>
-                <InputFile OnChange="SelectCsv" accept=".csv" />
-            </label>
+            <div class="csv-upload-row">
+                <button type="button"
+                        class="help-trigger"
+                        aria-label="Show CSV format help"
+                        title="Don't have a file? Get a sample or create one with AI."
+                        @onclick="OnHelpRequested">
+                    ?
+                </button>
+
+                <label class="csv-picker">
+                    <span>Upload word list</span>
+                    <InputFile OnChange="SelectCsv" accept=".csv" />
+                </label>
+            </div>
 
             <p class="csv-file-name" role="status">
                 @if (_fileName is not null)
@@ -48,6 +58,9 @@
 
     [Parameter]
     public EventCallback OnDirectionSwitch { get; set; }
+
+    [Parameter]
+    public EventCallback OnHelpRequested { get; set; }
 
     private async Task SelectCsv(InputFileChangeEventArgs args)
     {

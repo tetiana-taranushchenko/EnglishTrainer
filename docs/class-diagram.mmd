@@ -13,6 +13,7 @@ classDiagram
         +string Explanation
         +string Example
         +string PartOfSpeech
+        +VocabularyEntry()
         +VocabularyEntry(word, translation, explanation, example, partOfSpeech)
     }
 
@@ -21,9 +22,12 @@ classDiagram
         +string PartOfSpeech
         +string[] Options
         +string CorrectAnswer
+        +string PromptLanguage
+        +string OptionsLanguage
         +string? Explanation
         +string? Example
-        +PracticeQuestion(promptText, partOfSpeech, options, correctAnswer)
+        +string? EnglishWord
+        +PracticeQuestion(promptText, partOfSpeech, options, correctAnswer, promptLanguage, optionsLanguage)
     }
 
     class PracticeAnswer {
@@ -49,10 +53,22 @@ classDiagram
     }
 
     class CsvVocabularyImporter {
+        +const long MaxSizeBytes
+        +const int MinEntryCount
         +Read(Stream stream) List~VocabularyEntry~
     }
 
+    class CsvVocabularyExporter {
+        +Write(IEnumerable~VocabularyEntry~ entries) string
+    }
+
+    class VocabularyEntryMap {
+        <<CsvHelper ClassMap>>
+        +VocabularyEntryMap()
+    }
+
     class PracticeQuestionFactory {
+        +const int OptionsPerQuestion
         +Create(entry, entries, direction) PracticeQuestion
         -GenerateOptions(entry, entries, correctAnswer, useUkrainianOptions) string[]
     }
@@ -66,6 +82,11 @@ classDiagram
     PracticeSession "1" *-- "*" PracticeAnswer : композиція
 
     CsvVocabularyImporter ..> VocabularyEntry : створює
+    CsvVocabularyImporter ..> VocabularyEntryMap : використовує
+    CsvVocabularyExporter ..> VocabularyEntry : читає
+    CsvVocabularyExporter ..> VocabularyEntryMap : використовує
+    VocabularyEntryMap ..> VocabularyEntry : мапить
+
     PracticeQuestionFactory ..> VocabularyEntry : використовує
     PracticeQuestionFactory ..> PracticeQuestion : створює
     PracticeQuestionFactory ..> PracticeDirection : використовує

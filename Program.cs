@@ -22,6 +22,10 @@ builder.Host.UseSerilog();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddSingleton<PracticeQuestionFactory>();
+builder.Services.AddSingleton<CsvVocabularyImporter>();
+builder.Services.AddSingleton<CsvVocabularyExporter>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

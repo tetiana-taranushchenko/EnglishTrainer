@@ -8,6 +8,8 @@ namespace EnglishTrainer.Components.Pages;
 public partial class Home
 {
     [Inject] public ILogger<Home> Logger { get; set; } = default!;
+    [Inject] public PracticeQuestionFactory Factory { get; set; } = default!;
+    [Inject] public CsvVocabularyImporter Importer { get; set; } = default!;
 
     private PracticeSession _session = new(StarterQuestions.Create());
     private PracticeQuestion[]? _importedQuestions;
@@ -17,7 +19,8 @@ public partial class Home
     private bool _isComplete;
     private PracticeDirection _direction = PracticeDirection.UkrainianToEnglish;
     private string? _errorMessage;
-        
+    private bool _isHelpOpen;
+
     private void SelectAnswer(string option)
     {
         if (_isCorrect.HasValue)
@@ -27,7 +30,7 @@ public partial class Home
         _selectedAnswer = option;
         _isCorrect = _session.SubmitAnswer(option);
     }
-    
+
     private async Task HandleCsvSelected(IBrowserFile file)
     {
         _errorMessage = null;
@@ -47,18 +50,8 @@ public partial class Home
             await browserStream.CopyToAsync(csvStream);
             csvStream.Position = 0;
 
-            var entries = new CsvVocabularyImporter().Read(csvStream);
-
-            var factory = new PracticeQuestionFactory();
-            var questions = entries.Select(entry => factory.Create(entry, entries, _direction))
-                .ToArray();
-
-            _importedEntries = entries;
-            _importedQuestions = questions;
-            _session = new PracticeSession(questions);
-            _isCorrect = null;
-            _selectedAnswer = null;
-            _isComplete = false;
+            var entries = Importer.Read(csvStream);
+            RebuildPractice(entries, _direction);
 
             Logger.LogInformation(
                 "CSV import succeeded for {FileName}: {EntryCount} entries, direction {Direction}.",
@@ -81,19 +74,20 @@ public partial class Home
             _errorMessage = "Could not build a practice session from this file. Please check the content.";
         }
     }
-        
+
     private void GoToNextQuestion()
     {
         if (_session.MoveNext())
         {
             _isCorrect = null;
             _selectedAnswer = null;
-        } else
+        }
+        else
         {
             _isComplete = true;
         }
     }
-        
+
     private void RestartPractice()
     {
         var questions = _importedQuestions ?? StarterQuestions.Create(_direction);
@@ -102,7 +96,7 @@ public partial class Home
         _isCorrect = null;
         _selectedAnswer = null;
     }
-    
+
     private bool CanSwitchDirection => _session.Answers.Count == 0;
 
     private void SwitchDirection()
@@ -116,17 +110,29 @@ public partial class Home
             ? PracticeDirection.EnglishToUkrainian
             : PracticeDirection.UkrainianToEnglish;
 
-        var entries = _importedEntries;
-        if (entries is not null)
+        if (_importedEntries is not null)
         {
-            var factory = new PracticeQuestionFactory();
-            _importedQuestions = entries
-                .Select(entry => factory.Create(entry, entries, newDirection))
-                .ToArray();
+            RebuildPractice(_importedEntries, newDirection);
         }
+        else
+        {
+            _direction = newDirection;
+            RestartPractice();
+        }
+    }
 
-        _direction = newDirection;
-        RestartPractice();
+    private void RebuildPractice(List<VocabularyEntry> entries, PracticeDirection direction)
+    {
+        var questions = entries
+            .Select(entry => Factory.Create(entry, entries, direction))
+            .ToArray();
+
+        _importedEntries = entries;
+        _importedQuestions = questions;
+        _direction = direction;
+        _session = new PracticeSession(questions);
+        _isCorrect = null;
+        _selectedAnswer = null;
+        _isComplete = false;
     }
 }
-

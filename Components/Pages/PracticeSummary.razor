@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.JSInterop
 @inject IJSRuntime JS
+@inject CsvVocabularyExporter Exporter
 
 @{
     var correctAnswers = Answers.Where(answer => answer.IsCorrect).ToArray();
@@ -123,7 +124,7 @@
 
     private async Task DownloadReview()
     {
-        var csv = new CsvVocabularyExporter().Write(ReviewEntries);
+        var csv = Exporter.Write(ReviewEntries);
         var fileName = $"words-to-review-{DateTime.Now:yyyyMMdd-HHmm}.csv";
         await JS.InvokeVoidAsync("downloadCsv", fileName, csv);
     }

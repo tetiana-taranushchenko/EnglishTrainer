@@ -7,7 +7,7 @@
             <p>
                 @foreach (var part in GetExampleParts())
                 {
-                    @if (string.Equals(part, CorrectAnswer, StringComparison.OrdinalIgnoreCase))
+                    @if (string.Equals(part, HighlightWord ?? CorrectAnswer, StringComparison.OrdinalIgnoreCase))
                     {
                         <strong>@part</strong>
                     }
@@ -45,6 +45,7 @@
     @code {
     [Parameter] public bool? IsCorrect { get; set; }
     [Parameter] public string CorrectAnswer { get; set; } = string.Empty;
+    [Parameter] public string? HighlightWord { get; set; }
     [Parameter] public string? Example { get; set; }
     [Parameter] public EventCallback OnNext { get; set; }
     [Parameter] public int TotalQuestions { get; set; }
@@ -54,13 +55,14 @@
     private string[] GetExampleParts()
     {
         var text = Example ?? string.Empty;
+        var target = HighlightWord ?? CorrectAnswer;
 
-        if (string.IsNullOrWhiteSpace(CorrectAnswer))
+        if (string.IsNullOrWhiteSpace(target))
         {
             return [text];
         }
 
-        var answer = System.Text.RegularExpressions.Regex.Escape(CorrectAnswer);
+        var answer = System.Text.RegularExpressions.Regex.Escape(target);
         return System.Text.RegularExpressions.Regex.Split(
             text,
             $@"(?i)(?<!\w)({answer})(?!\w)");

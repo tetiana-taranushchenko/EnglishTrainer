@@ -18,7 +18,8 @@
             <PracticeHeader OnCsvSelected="HandleCsvSelected"
                             Direction="@_direction"
                             CanSwitchDirection="@CanSwitchDirection"
-                            OnDirectionSwitch="SwitchDirection" />
+                            OnDirectionSwitch="SwitchDirection"
+                            OnHelpRequested="() => _isHelpOpen = true" />
             @if (_importedQuestions is not null)
             {
                 <QuestionCard Question="@_session.CurrentQuestion"
@@ -28,7 +29,8 @@
 
                 <AnswerFooter IsCorrect="@_isCorrect"
                               CorrectAnswer="@_session.CurrentQuestion.CorrectAnswer"
-                              OnNext="GoToNextQuestion" 
+                              HighlightWord="@_session.CurrentQuestion.EnglishWord"
+                              OnNext="GoToNextQuestion"
                               Example="@_session.CurrentQuestion.Example"
                               TotalQuestions="@_session.TotalQuestions"
                               CorrectCount="@_session.CorrectCount"
@@ -40,4 +42,6 @@
 </div>
 
 <Toast Message="@_errorMessage" OnDismiss="() => _errorMessage = null" />
+
+<HelpDialog IsOpen="@_isHelpOpen" OnClose="() => _isHelpOpen = false" />
 

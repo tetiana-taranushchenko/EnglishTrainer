@@ -1,0 +1,83 @@
+@if (IsOpen)
+{
+    <div class="help-backdrop" @onclick="Close">
+        <div class="help-dialog" role="dialog" aria-modal="true" aria-labelledby="help-title"
+             @onclick:stopPropagation>
+            <header class="help-header">
+                <h2 id="help-title">Need a word list?</h2>
+                <button type="button" class="help-close" aria-label="Close" @onclick="Close">×</button>
+            </header>
+
+            <section class="help-section">
+                <h3>Option 1 — Use our sample</h3>
+                <p>Download a small ready-made file with 10 words. Upload it to see how the trainer works.</p>
+                <a class="help-action help-action--primary" href="samples/sample-words.csv" download>
+                    Download sample.csv
+                </a>
+            </section>
+
+            <section class="help-section">
+                <h3>Option 2 — Generate your own with AI</h3>
+                <p>
+                    Copy the prompt below, paste it into ChatGPT, Claude or Gemini,
+                    add the words you want to learn, and save the response as a <code>.csv</code> file.
+                </p>
+
+                <pre class="help-prompt">@PromptText</pre>
+
+                <div class="help-actions">
+                    <button type="button" class="help-action help-action--primary"
+                            onclick="copyPromptFromButton(this)">
+                        Copy prompt
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    private const string PromptText = """
+        You are helping me build a vocabulary trainer CSV file.
+
+        IMPORTANT — DELIVERY FORMAT:
+        - Do NOT print the CSV content in the chat.
+        - Do NOT wrap it in code fences or paste it as text.
+        - Instead, create an actual downloadable file named `words.csv`
+          and attach it to your reply so I can download it with one click.
+        - Use your file/attachment/canvas tool to produce a real `.csv` file
+          (UTF-8, no BOM). The chat message itself should contain only one
+          short sentence like "Here is your words.csv file." plus the file.
+
+        CSV structure (strict):
+        - First line (header): word,translation,explanation,example,type
+        - Delimiter: comma (,)
+        - Encoding: UTF-8
+        - Enclose fields that contain commas in double quotes
+        - At least 4 rows of data
+
+        Columns:
+        - word: English word or phrase
+        - translation: ONE main Ukrainian translation (short, no semicolons, no slashes)
+        - explanation: short English explanation (one sentence)
+        - example: one natural English example sentence using the word
+        - type: part of speech — noun, verb, adjective, adverb, phrase, phrasal verb
+
+        Content rules:
+        - Keep translation as ONE Ukrainian word or short phrase
+        - No semicolons (;) in translation
+        - No multiple variants separated by slashes
+        - Example sentence must actually contain the target word
+
+        Words I want to learn:
+        <list your words here>
+        """;
+
+    private async Task Close()
+    {
+        await OnClose.InvokeAsync();
+    }
+}
