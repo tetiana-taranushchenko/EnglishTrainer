@@ -9,7 +9,7 @@ public partial class Home
 {
     [Inject] public ILogger<Home> Logger { get; set; } = default!;
     [Inject] public PracticeQuestionFactory Factory { get; set; } = default!;
-    [Inject] public CsvVocabularyImporter Importer { get; set; } = default!;
+    [Inject] public IVocabularyImporter Importer { get; set; } = default!;
 
     private PracticeSession _session = new(StarterQuestions.Create());
     private PracticeQuestion[]? _importedQuestions;
@@ -44,7 +44,7 @@ public partial class Home
 
         try
         {
-            using var browserStream = file.OpenReadStream(CsvVocabularyImporter.MaxSizeBytes);
+            using var browserStream = file.OpenReadStream(Importer.MaxSizeBytes);
             using var csvStream = new MemoryStream();
 
             await browserStream.CopyToAsync(csvStream);
@@ -59,7 +59,7 @@ public partial class Home
         }
         catch (IOException ex)
         {
-            var maxMb = CsvVocabularyImporter.MaxSizeBytes / 1024 / 1024;
+            var maxMb = Importer.MaxSizeBytes / 1024 / 1024;
             Logger.LogWarning(ex, "Rejected upload {FileName}: exceeds {MaxMb} MB limit.", file.Name, maxMb);
             _errorMessage = $"This file is too large. The maximum size is {maxMb} MB.";
         }

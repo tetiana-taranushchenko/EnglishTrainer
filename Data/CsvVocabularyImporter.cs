@@ -5,10 +5,12 @@ using EnglishTrainer.Models;
 
 namespace EnglishTrainer.Data;
 
-public class CsvVocabularyImporter
+public class CsvVocabularyImporter : IVocabularyImporter
 {
     public const long MaxSizeBytes = 5 * 1024 * 1024;
     public const int MinEntryCount = PracticeQuestionFactory.OptionsPerQuestion;
+
+    long IVocabularyImporter.MaxSizeBytes => MaxSizeBytes;
 
     public List<VocabularyEntry> Read(Stream stream)
     {
