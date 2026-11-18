@@ -45,5 +45,4 @@ public class PracticeSession
         _answers.Add(answer);
         return isCorrect;
     }
-    
 }

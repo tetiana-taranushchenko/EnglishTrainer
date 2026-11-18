@@ -10,6 +10,24 @@ window.downloadCsv = (fileName, csvContent) => {
     URL.revokeObjectURL(url);
 };
 
+window.speakEn = (text) => {
+    if (!text || !('speechSynthesis' in window)) return false;
+    try {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'en-US';
+        u.rate = 0.95;
+        u.pitch = 1;
+        const voices = window.speechSynthesis.getVoices();
+        const enVoice = voices.find(v => /^en(-|_|$)/i.test(v.lang));
+        if (enVoice) u.voice = enVoice;
+        window.speechSynthesis.speak(u);
+        return true;
+    } catch {
+        return false;
+    }
+};
+
 window.copyTextSync = (text) => {
     const textarea = document.createElement('textarea');
     textarea.value = text;

@@ -76,7 +76,6 @@
 .question-heading {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
 }
 
@@ -86,10 +85,18 @@
     overflow-wrap: anywhere;
     line-height: 1.2;
     min-block-size: 1.6em;
+    display: flex;
+    align-items: center;
 }
 
 .question-heading .part-of-speech {
     flex-shrink: 0;
+    margin-left: auto;
+}
+
+.question-heading .speak-button {
+    flex-shrink: 0;
+    order: -1;
 }
 
 .explanation {
@@ -180,3 +187,23 @@
     overflow-wrap: anywhere;
     box-sizing: border-box;
 }
+.speak-button {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid #d5dbea;
+    background: #fff;
+    color: #40369a;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+
+.speak-button:hover { background: #eeedff; }
+.speak-button:active { transform: scale(0.95); }

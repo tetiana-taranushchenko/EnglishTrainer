@@ -1,6 +1,16 @@
 @using EnglishTrainer.Models
 
 <div class="question-heading">
+    @if (IsEnglishPrompt)
+    {
+        <button type="button"
+                class="speak-button"
+                title="Listen"
+                aria-label="Listen to pronunciation"
+                onclick="speakEn(this.nextElementSibling.textContent)">
+            🔊
+        </button>
+    }
     <h2 lang="@Question.PromptLanguage">@Question.PromptText</h2>
     <span class="part-of-speech">@Question.PartOfSpeech</span>
 </div>
@@ -44,7 +54,10 @@
     [Parameter] public bool? IsCorrect { get; set; }
     [Parameter] public string? SelectedAnswer { get; set; }
     [Parameter] public EventCallback<string> OnAnswerSelected { get; set; }
-    
+
+    private bool IsEnglishPrompt =>
+        Question.PromptLanguage?.StartsWith("en", StringComparison.OrdinalIgnoreCase) == true;
+
     private string GetAnswerClass(string option)
     {
         if (!IsCorrect.HasValue)
