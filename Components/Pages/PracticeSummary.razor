@@ -33,7 +33,7 @@
 
             <label class="summary-upload">
                 Upload word list
-                <InputFile OnChange="HandleUpload" accept=".csv,text/csv" />
+                <InputFile @key="_inputKey" OnChange="HandleUpload" accept=".csv,text/csv" />
             </label>
         </div>
     </header>
@@ -105,9 +105,12 @@
     [Parameter]
     public EventCallback<IBrowserFile> OnCsvSelected { get; set; }
 
-    private Task HandleUpload(InputFileChangeEventArgs args)
+    private int _inputKey;
+
+    private async Task HandleUpload(InputFileChangeEventArgs args)
     {
-        return OnCsvSelected.InvokeAsync(args.File);
+        await OnCsvSelected.InvokeAsync(args.File);
+        _inputKey++;
     }
 
     private VocabularyEntry[] ReviewEntries =>

@@ -31,7 +31,7 @@
 
                 <label class="csv-picker">
                     <span>Upload word list</span>
-                    <InputFile OnChange="SelectCsv" accept=".csv" />
+                    <InputFile @key="_inputKey" OnChange="SelectCsv" accept=".csv" />
                 </label>
             </div>
 
@@ -47,6 +47,7 @@
 
 @code {
     private string? _fileName;
+    private int _inputKey;
 
     [Parameter]
     public PracticeDirection Direction { get; set; } =
@@ -68,5 +69,6 @@
         _fileName = file.Name;
 
         await OnCsvSelected.InvokeAsync(file);
+        _inputKey++;
     }
 }
