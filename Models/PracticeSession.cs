@@ -6,11 +6,12 @@ public class PracticeSession
     private int _currentQuestionIndex;
     public PracticeQuestion CurrentQuestion => _questions[_currentQuestionIndex];
     private readonly List<PracticeAnswer> _answers = new();
+    private readonly IReadOnlyList<PracticeAnswer> _answersView;
     public int TotalQuestions => _questions.Length;
     public int CorrectCount => _answers.Count(answer => answer.IsCorrect);
     public int IncorrectCount => _answers.Count - CorrectCount;
-    public IReadOnlyList<PracticeAnswer> Answers => _answers;
-    
+    public IReadOnlyList<PracticeAnswer> Answers => _answersView;
+
     public PracticeSession(PracticeQuestion[] questions)
     {
         ArgumentNullException.ThrowIfNull(questions);
@@ -21,13 +22,14 @@ public class PracticeSession
         }
 
         _questions = questions.ToArray();
+        _answersView = _answers.AsReadOnly();
     }
-    
+
     public bool IsCorrectAnswer(string answer)
     {
         return CurrentQuestion.CorrectAnswer == answer;
     }
-    
+
     public bool MoveNext()
     {
         if (_currentQuestionIndex < _questions.Length - 1)
@@ -37,7 +39,7 @@ public class PracticeSession
         }
         return false;
     }
-    
+
     public bool SubmitAnswer(string selectedAnswer)
     {
         var isCorrect = IsCorrectAnswer(selectedAnswer);

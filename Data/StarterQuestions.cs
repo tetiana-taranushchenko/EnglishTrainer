@@ -27,8 +27,14 @@ public class StarterQuestions
             ["conduct", "maintain", "suggest", "contemplate"])
     ];
 
+    private static readonly PracticeQuestion[] UkToEn = Build(PracticeDirection.UkrainianToEnglish);
+    private static readonly PracticeQuestion[] EnToUk = Build(PracticeDirection.EnglishToUkrainian);
+
     public static PracticeQuestion[] Create(
-        PracticeDirection direction = PracticeDirection.UkrainianToEnglish)
+        PracticeDirection direction = PracticeDirection.UkrainianToEnglish) =>
+        direction == PracticeDirection.EnglishToUkrainian ? EnToUk : UkToEn;
+
+    private static PracticeQuestion[] Build(PracticeDirection direction)
     {
         bool enToUk = direction == PracticeDirection.EnglishToUkrainian;
 

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Provides global using Xunit; test files rely on this. -->
     <Using Include="Xunit" />
   </ItemGroup>
 
