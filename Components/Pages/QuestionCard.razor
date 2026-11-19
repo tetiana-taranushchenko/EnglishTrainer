@@ -19,7 +19,7 @@
 {
     <details class="explanation" @key="Question">
         <summary class="explanation-toggle">Explanation</summary>
-        <p class="explanation-text">@GetExplanationText()</p>
+        <p class="explanation-text">@Question.Explanation</p>
     </details>
 }
 
@@ -71,15 +71,5 @@
         }
 
         return option == SelectedAnswer ? "answer-incorrect" : "";
-    }
-    
-    private string GetExplanationText()
-    {
-        var text = Question.Explanation?.TrimStart() ?? "";
-        var prefix = $"({Question.PartOfSpeech})";
-
-        return text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
-            ? text[prefix.Length..].TrimStart()
-            : text;
     }
 }
