@@ -22,6 +22,9 @@ builder.Host.UseSerilog();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.Configure<VocabularyImportOptions>(
+    builder.Configuration.GetSection(VocabularyImportOptions.SectionName));
+
 builder.Services.AddSingleton<PracticeQuestionFactory>();
 builder.Services.AddSingleton<CsvVocabularyImporter>();
 builder.Services.AddSingleton<IVocabularyImporter>(sp => sp.GetRequiredService<CsvVocabularyImporter>());

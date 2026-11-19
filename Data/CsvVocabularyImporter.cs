@@ -2,15 +2,22 @@ using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration;
 using EnglishTrainer.Models;
+using Microsoft.Extensions.Options;
 
 namespace EnglishTrainer.Data;
 
 public class CsvVocabularyImporter : IVocabularyImporter
 {
-    public const long MaxSizeBytes = 5 * 1024 * 1024;
     public const int MinEntryCount = PracticeQuestionFactory.OptionsPerQuestion;
 
-    long IVocabularyImporter.MaxSizeBytes => MaxSizeBytes;
+    private readonly VocabularyImportOptions _options;
+
+    public CsvVocabularyImporter(IOptions<VocabularyImportOptions>? options = null)
+    {
+        _options = options?.Value ?? new VocabularyImportOptions();
+    }
+
+    public long MaxSizeBytes => _options.MaxSizeBytes;
 
     public List<VocabularyEntry> Read(Stream stream)
     {

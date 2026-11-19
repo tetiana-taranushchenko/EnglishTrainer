@@ -73,6 +73,11 @@ public partial class Home
             Logger.LogError(ex, "Failed to build practice session from {FileName}.", file.Name);
             _errorMessage = "Could not build a practice session from this file. Please check the content.";
         }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Unexpected error while importing {FileName}.", file.Name);
+            _errorMessage = "Something went wrong while reading this file. Please try another one.";
+        }
     }
 
     private void GoToNextQuestion()
