@@ -20,7 +20,7 @@ public class PracticeSession
             throw new ArgumentException("Practice session requires at least one question.", nameof(questions));
         }
 
-        _questions = questions;
+        _questions = questions.ToArray();
     }
     
     public bool IsCorrectAnswer(string answer)

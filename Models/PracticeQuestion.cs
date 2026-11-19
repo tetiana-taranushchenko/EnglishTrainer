@@ -14,9 +14,9 @@ public class PracticeQuestion
     public string CorrectAnswer { get; }
     public string PromptLanguage { get; }
     public string OptionsLanguage { get; }
-    public string? Explanation { get; set; }
-    public string? Example { get; set; }
-    public string? EnglishWord { get; set; }
+    public string? Explanation { get; init; }
+    public string? Example { get; init; }
+    public string? EnglishWord { get; init; }
 
     public PracticeQuestion(
         string promptText,
