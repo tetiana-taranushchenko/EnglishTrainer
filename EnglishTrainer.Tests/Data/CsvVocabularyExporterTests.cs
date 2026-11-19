@@ -4,13 +4,12 @@ namespace EnglishTrainer.Tests.Data;
 
 public class CsvVocabularyExporterTests
 {
-    private readonly CsvVocabularyExporter _exporter = new();
     private readonly CsvVocabularyImporter _importer = new();
 
     [Fact]
     public void Write_ProducesHeaderRowWithExpectedColumns()
     {
-        var csv = _exporter.Write(new[]
+        var csv = CsvVocabularyExporter.Write(new[]
         {
             new VocabularyEntry("cat", "кіт", "", "", "noun")
         });
@@ -28,7 +27,7 @@ public class CsvVocabularyExporterTests
             new VocabularyEntry("run", "бігти", "move fast", "They run.", "verb"),
         };
 
-        var csv = _exporter.Write(entries);
+        var csv = CsvVocabularyExporter.Write(entries);
 
         csv.Should().Contain("cat").And.Contain("кіт").And.Contain("run").And.Contain("бігти");
     }
@@ -44,7 +43,7 @@ public class CsvVocabularyExporterTests
             new VocabularyEntry("book", "книга", "reading", "A book.", "noun"),
         };
 
-        var csv = _exporter.Write(original);
+        var csv = CsvVocabularyExporter.Write(original);
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(csv));
         var restored = _importer.Read(stream);
 

@@ -10,7 +10,7 @@ public class PracticeQuestion
 {
     public string PromptText { get; }
     public string PartOfSpeech { get; }
-    public string[] Options { get; }
+    public IReadOnlyList<string> Options { get; }
     public string CorrectAnswer { get; }
     public string PromptLanguage { get; }
     public string OptionsLanguage { get; }

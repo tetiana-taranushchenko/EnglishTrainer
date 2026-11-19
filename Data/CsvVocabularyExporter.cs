@@ -4,9 +4,9 @@ using EnglishTrainer.Models;
 
 namespace EnglishTrainer.Data;
 
-public class CsvVocabularyExporter
+public static class CsvVocabularyExporter
 {
-    public string Write(IEnumerable<VocabularyEntry> entries)
+    public static string Write(IEnumerable<VocabularyEntry> entries)
     {
         using var writer = new StringWriter();
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);

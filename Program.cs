@@ -25,7 +25,6 @@ builder.Services.AddRazorComponents()
 builder.Services.AddSingleton<PracticeQuestionFactory>();
 builder.Services.AddSingleton<CsvVocabularyImporter>();
 builder.Services.AddSingleton<IVocabularyImporter>(sp => sp.GetRequiredService<CsvVocabularyImporter>());
-builder.Services.AddSingleton<CsvVocabularyExporter>();
 
 var app = builder.Build();
 
