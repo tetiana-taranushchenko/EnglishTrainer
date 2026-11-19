@@ -21,15 +21,20 @@
     }
 
     <div class="footer-actions">
-        <div class="answer-counts">
-            <span class="answer-count answer-count--total">
-                Total <strong>@TotalQuestions</strong>
+        <div class="answer-counts" role="group" aria-label="Session progress">
+            <span class="answer-count answer-count--progress">
+                <span class="answer-count-label">Done</span>
+                <span class="answer-count-value">
+                    <strong>@AnsweredCount</strong><span class="answer-count-sep">/</span>@TotalQuestions
+                </span>
             </span>
             <span class="answer-count answer-count--correct">
-                Correct <strong>@CorrectCount</strong>
+                <span class="answer-count-mark" aria-hidden="true">✓</span>
+                <span class="answer-count-value"><strong>@CorrectCount</strong></span>
             </span>
             <span class="answer-count answer-count--incorrect">
-                Incorrect <strong>@IncorrectCount</strong>
+                <span class="answer-count-mark" aria-hidden="true">✕</span>
+                <span class="answer-count-value"><strong>@IncorrectCount</strong></span>
             </span>
         </div>
         <button type="button"
@@ -39,7 +44,7 @@
                 disabled="@(!IsCorrect.HasValue)">
             Next
         </button>
-    </div>  
+    </div>
 </div>
 
     @code {
@@ -51,6 +56,8 @@
     [Parameter] public int TotalQuestions { get; set; }
     [Parameter] public int CorrectCount { get; set; }
     [Parameter] public int IncorrectCount { get; set; }
+
+    private int AnsweredCount => CorrectCount + IncorrectCount;
     
     private string[] GetExampleParts()
     {

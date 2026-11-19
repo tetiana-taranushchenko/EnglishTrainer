@@ -483,3 +483,4 @@ $RECYCLE.BIN/
 
 # Serilog local log files
 logs/
+CLAUDE.local.md
