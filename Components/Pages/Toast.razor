@@ -21,6 +21,7 @@
 
     private string? _visibleMessage;
     private CancellationTokenSource? _cts;
+    private bool _dismissed;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -31,6 +32,7 @@
 
         _cts?.Cancel();
         _visibleMessage = Message;
+        _dismissed = false;
 
         if (_visibleMessage is null)
         {
@@ -50,6 +52,12 @@
 
     private async Task Dismiss()
     {
+        if (_dismissed)
+        {
+            return;
+        }
+
+        _dismissed = true;
         _visibleMessage = null;
         await OnDismiss.InvokeAsync();
     }

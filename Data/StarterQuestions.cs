@@ -18,7 +18,7 @@ public class StarterQuestions
                     "надійний",
                     promptLanguage: "en",
                     optionsLanguage: "uk"
-                ),
+                ) { EnglishWord = "reliable" },
                 new PracticeQuestion(
                     "contemplate",
                     "verb",
@@ -26,7 +26,7 @@ public class StarterQuestions
                     "розмірковувати",
                     promptLanguage: "en",
                     optionsLanguage: "uk"
-                )
+                ) { EnglishWord = "contemplate" }
             ];
         }
 
@@ -39,7 +39,7 @@ public class StarterQuestions
                 "reliable",
                 promptLanguage: "uk",
                 optionsLanguage: "en"
-            ),
+            ) { EnglishWord = "reliable" },
             new PracticeQuestion(
                 "розмірковувати",
                 "verb",
@@ -47,7 +47,7 @@ public class StarterQuestions
                 "contemplate",
                 promptLanguage: "uk",
                 optionsLanguage: "en"
-            )
+            ) { EnglishWord = "contemplate" }
         ];
     }
 }

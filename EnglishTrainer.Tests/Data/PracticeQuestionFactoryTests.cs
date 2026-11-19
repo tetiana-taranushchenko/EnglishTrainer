@@ -118,6 +118,27 @@ public class PracticeQuestionFactoryTests
             .WithMessage("*distinct answers*");
     }
 
+    [Theory]
+    [InlineData(PracticeDirection.UkrainianToEnglish)]
+    [InlineData(PracticeDirection.EnglishToUkrainian)]
+    public void Create_PreservesEntryIdentity_ForReviewExportRoundTrip(PracticeDirection direction)
+    {
+        var entry = new VocabularyEntry("cat", "кіт", "a small animal", "The cat sleeps.", "noun");
+        var pool = VocabularyBuilder.Nouns(5);
+        pool.Add(entry);
+
+        var question = _factory.Create(entry, pool, direction);
+
+        var promptIsUkrainian = string.Equals(
+            question.PromptLanguage, "uk", StringComparison.OrdinalIgnoreCase);
+        var word = question.EnglishWord
+            ?? (promptIsUkrainian ? question.CorrectAnswer : question.PromptText);
+        var translation = promptIsUkrainian ? question.PromptText : question.CorrectAnswer;
+
+        word.Should().Be(entry.Word);
+        translation.Should().Be(entry.Translation);
+    }
+
     [Fact]
     public void Create_DeduplicatesCandidates_WhenPoolContainsRepeatedWords()
     {
