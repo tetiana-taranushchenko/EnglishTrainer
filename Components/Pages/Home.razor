@@ -7,34 +7,34 @@
 
 <div class="practice-page">
     <section class="practice-card">
-        @if (_isComplete) 
+        @if (_controller.IsComplete)
         {
-            <PracticeSummary Answers="@_session.Answers"
-                             OnRestart="RestartPractice"
+            <PracticeSummary Answers="@_controller.Session.Answers"
+                             OnRestart="_controller.Restart"
                              OnCsvSelected="HandleCsvSelected" />
         }
         else
         {
             <PracticeHeader OnCsvSelected="HandleCsvSelected"
-                            Direction="@_direction"
-                            CanSwitchDirection="@CanSwitchDirection"
-                            OnDirectionSwitch="SwitchDirection"
+                            Direction="@_controller.Direction"
+                            CanSwitchDirection="@_controller.CanSwitchDirection"
+                            OnDirectionSwitch="_controller.SwitchDirection"
                             OnHelpRequested="() => _isHelpOpen = true" />
-            @if (_importedQuestions is not null)
+            @if (_controller.HasImportedQuestions)
             {
-                <QuestionCard Question="@_session.CurrentQuestion"
-                              IsCorrect="@_isCorrect"
-                              SelectedAnswer="@_selectedAnswer"
-                              OnAnswerSelected="SelectAnswer" />
+                <QuestionCard Question="@_controller.Session.CurrentQuestion"
+                              IsCorrect="@_controller.IsCorrect"
+                              SelectedAnswer="@_controller.SelectedAnswer"
+                              OnAnswerSelected="_controller.SelectAnswer" />
 
-                <AnswerFooter IsCorrect="@_isCorrect"
-                              CorrectAnswer="@_session.CurrentQuestion.CorrectAnswer"
-                              HighlightWord="@_session.CurrentQuestion.EnglishWord"
-                              OnNext="GoToNextQuestion"
-                              Example="@_session.CurrentQuestion.Example"
-                              TotalQuestions="@_session.TotalQuestions"
-                              CorrectCount="@_session.CorrectCount"
-                              IncorrectCount="@_session.IncorrectCount"
+                <AnswerFooter IsCorrect="@_controller.IsCorrect"
+                              CorrectAnswer="@_controller.Session.CurrentQuestion.CorrectAnswer"
+                              HighlightWord="@_controller.Session.CurrentQuestion.EnglishWord"
+                              OnNext="_controller.GoToNextQuestion"
+                              Example="@_controller.Session.CurrentQuestion.Example"
+                              TotalQuestions="@_controller.Session.TotalQuestions"
+                              CorrectCount="@_controller.Session.CorrectCount"
+                              IncorrectCount="@_controller.Session.IncorrectCount"
                               />
             }
         }
@@ -44,4 +44,3 @@
 <Toast Message="@_errorMessage" OnDismiss="() => _errorMessage = null" />
 
 <HelpDialog IsOpen="@_isHelpOpen" OnClose="() => _isHelpOpen = false" />
-

@@ -134,4 +134,38 @@ public class CsvVocabularyImporterTests
         act.Should().Throw<InvalidDataException>()
             .WithMessage($"*at least {CsvVocabularyImporter.MinEntryCount} words*");
     }
+
+    [Fact]
+    public void Read_Throws_WhenTranslationsAreNotDistinctEnough()
+    {
+        var csv = $"""
+            {ValidHeader}
+            cat,тварина,,,noun
+            dog,тварина,,,noun
+            fox,тварина,,,noun
+            wolf,тварина,,,noun
+            """;
+
+        var act = () => _importer.Read(StreamFrom(csv));
+
+        act.Should().Throw<InvalidDataException>()
+            .WithMessage($"*at least {CsvVocabularyImporter.MinEntryCount} distinct*");
+    }
+
+    [Fact]
+    public void Read_Throws_WhenWordsAreNotDistinctEnough()
+    {
+        var csv = $"""
+            {ValidHeader}
+            cat,кіт,,,noun
+            cat,котик,,,noun
+            cat,кицька,,,noun
+            cat,муркотик,,,noun
+            """;
+
+        var act = () => _importer.Read(StreamFrom(csv));
+
+        act.Should().Throw<InvalidDataException>()
+            .WithMessage($"*at least {CsvVocabularyImporter.MinEntryCount} distinct*");
+    }
 }

@@ -11,24 +11,13 @@ public partial class Home
     [Inject] public PracticeQuestionFactory Factory { get; set; } = default!;
     [Inject] public IVocabularyImporter Importer { get; set; } = default!;
 
-    private PracticeSession _session = new(StarterQuestions.Create());
-    private PracticeQuestion[]? _importedQuestions;
-    private List<VocabularyEntry>? _importedEntries;
-    private bool? _isCorrect;
-    private string? _selectedAnswer;
-    private bool _isComplete;
-    private PracticeDirection _direction = PracticeDirection.UkrainianToEnglish;
+    private PracticeController _controller = default!;
     private string? _errorMessage;
     private bool _isHelpOpen;
 
-    private void SelectAnswer(string option)
+    protected override void OnInitialized()
     {
-        if (_isCorrect.HasValue)
-        {
-            return;
-        }
-        _selectedAnswer = option;
-        _isCorrect = _session.SubmitAnswer(option);
+        _controller = new PracticeController(Factory);
     }
 
     private async Task HandleCsvSelected(IBrowserFile file)
@@ -51,11 +40,11 @@ public partial class Home
             csvStream.Position = 0;
 
             var entries = Importer.Read(csvStream);
-            RebuildPractice(entries, _direction);
+            _controller.LoadEntries(entries, _controller.Direction);
 
             Logger.LogInformation(
                 "CSV import succeeded for {FileName}: {EntryCount} entries, direction {Direction}.",
-                file.Name, entries.Count, _direction);
+                file.Name, entries.Count, _controller.Direction);
         }
         catch (IOException ex)
         {
@@ -78,66 +67,5 @@ public partial class Home
             Logger.LogError(ex, "Unexpected error while importing {FileName}.", file.Name);
             _errorMessage = "Something went wrong while reading this file. Please try another one.";
         }
-    }
-
-    private void GoToNextQuestion()
-    {
-        if (_session.MoveNext())
-        {
-            _isCorrect = null;
-            _selectedAnswer = null;
-        }
-        else
-        {
-            _isComplete = true;
-        }
-    }
-
-    private void RestartPractice()
-    {
-        var questions = _importedQuestions ?? StarterQuestions.Create(_direction);
-        _session = new PracticeSession(questions);
-        _isComplete = false;
-        _isCorrect = null;
-        _selectedAnswer = null;
-    }
-
-    private bool CanSwitchDirection => _session.Answers.Count == 0;
-
-    private void SwitchDirection()
-    {
-        if (!CanSwitchDirection)
-        {
-            return;
-        }
-
-        var newDirection = _direction == PracticeDirection.UkrainianToEnglish
-            ? PracticeDirection.EnglishToUkrainian
-            : PracticeDirection.UkrainianToEnglish;
-
-        if (_importedEntries is not null)
-        {
-            RebuildPractice(_importedEntries, newDirection);
-        }
-        else
-        {
-            _direction = newDirection;
-            RestartPractice();
-        }
-    }
-
-    private void RebuildPractice(List<VocabularyEntry> entries, PracticeDirection direction)
-    {
-        var questions = entries
-            .Select(entry => Factory.Create(entry, entries, direction))
-            .ToArray();
-
-        _importedEntries = entries;
-        _importedQuestions = questions;
-        _direction = direction;
-        _session = new PracticeSession(questions);
-        _isCorrect = null;
-        _selectedAnswer = null;
-        _isComplete = false;
     }
 }
