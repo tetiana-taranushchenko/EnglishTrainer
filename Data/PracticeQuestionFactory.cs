@@ -41,41 +41,56 @@ public class PracticeQuestionFactory
         string correctAnswer,
         bool useUkrainianOptions)
     {
-        var candidates = entries
-            .Where(vocabularyEntry => vocabularyEntry.PartOfSpeech == entry.PartOfSpeech)
-            .Select(vocabularyEntry => useUkrainianOptions
-                ? vocabularyEntry.Translation
-                : vocabularyEntry.Word)
-            .Where(answer => answer != correctAnswer)
-            .Distinct()
-            .ToArray();
+        var sameType = PickDistractors(
+            entries.Where(candidate => candidate.PartOfSpeech == entry.PartOfSpeech),
+            correctAnswer,
+            useUkrainianOptions,
+            excluded: null);
 
-        Random.Shared.Shuffle(candidates);
-        var otherAnswers = candidates.Take(OtherAnswersPerQuestion).ToList();
+        var distractors = sameType.Take(OtherAnswersPerQuestion).ToList();
 
-        if (otherAnswers.Count < OtherAnswersPerQuestion)
+        if (distractors.Count < OtherAnswersPerQuestion)
         {
-            int missingCount = OtherAnswersPerQuestion - otherAnswers.Count;
-
-            var fallbackAnswers = entries
-                .Select(candidate => useUkrainianOptions ? candidate.Translation : candidate.Word)
-                .Where(answer => answer != correctAnswer && !otherAnswers.Contains(answer))
-                .Distinct()
-                .ToArray();
-
-            Random.Shared.Shuffle(fallbackAnswers);
-            otherAnswers.AddRange(fallbackAnswers.Take(missingCount));
+            var fallback = PickDistractors(entries, correctAnswer, useUkrainianOptions, distractors);
+            distractors.AddRange(fallback.Take(OtherAnswersPerQuestion - distractors.Count));
         }
 
-        if (otherAnswers.Count < OtherAnswersPerQuestion)
+        if (distractors.Count < OtherAnswersPerQuestion)
         {
             throw new InvalidOperationException(
                 $"At least {OptionsPerQuestion} distinct answers are required.");
         }
 
-        string[] options = [correctAnswer, .. otherAnswers];
-        Random.Shared.Shuffle(options);
+        var options = new string[OptionsPerQuestion];
+        options[0] = correctAnswer;
+        for (int i = 0; i < distractors.Count; i++)
+        {
+            options[i + 1] = distractors[i];
+        }
 
+        Random.Shared.Shuffle(options);
         return options;
+    }
+
+    private static List<string> PickDistractors(
+        IEnumerable<VocabularyEntry> source,
+        string correctAnswer,
+        bool useUkrainianOptions,
+        IReadOnlyCollection<string>? excluded)
+    {
+        var pool = source
+            .Select(candidate => useUkrainianOptions ? candidate.Translation : candidate.Word)
+            .Where(answer => answer != correctAnswer)
+            .Where(answer => excluded is null || !excluded.Contains(answer))
+            .Distinct()
+            .ToList();
+
+        for (int i = pool.Count - 1; i > 0; i--)
+        {
+            int j = Random.Shared.Next(i + 1);
+            (pool[i], pool[j]) = (pool[j], pool[i]);
+        }
+
+        return pool;
     }
 }

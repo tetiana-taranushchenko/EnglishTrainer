@@ -61,6 +61,15 @@ public class CsvVocabularyImporter : IVocabularyImporter
                 $"Word list needs at least {MinEntryCount} words to generate questions.");
         }
 
+        var distinctWords = entries.Select(entry => entry.Word).Distinct().Count();
+        var distinctTranslations = entries.Select(entry => entry.Translation).Distinct().Count();
+
+        if (distinctWords < MinEntryCount || distinctTranslations < MinEntryCount)
+        {
+            throw new InvalidDataException(
+                $"Word list needs at least {MinEntryCount} distinct words and translations to generate questions.");
+        }
+
         return entries;
     }
 }

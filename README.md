@@ -9,10 +9,6 @@ A small Blazor web app for practicing English vocabulary from your own word list
 - Shows your progress and a summary at the end of each practice session.
 - Lets you export your word list back to CSV.
 
-## Requirements
-
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
-
 ## Run the app
 
 ```bash

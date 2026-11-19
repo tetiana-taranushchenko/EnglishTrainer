@@ -114,12 +114,23 @@
     private VocabularyEntry[] ReviewEntries =>
         Answers
             .Where(answer => !answer.IsCorrect)
-            .Select(answer => new VocabularyEntry(
-                word: answer.Question.CorrectAnswer,
-                translation: answer.Question.PromptText,
-                explanation: answer.Question.Explanation ?? "",
-                example: answer.Question.Example ?? "",
-                partOfSpeech: answer.Question.PartOfSpeech))
+            .Select(answer =>
+            {
+                var question = answer.Question;
+                var promptIsUkrainian = string.Equals(
+                    question.PromptLanguage, "uk", StringComparison.OrdinalIgnoreCase);
+
+                var word = question.EnglishWord
+                    ?? (promptIsUkrainian ? question.CorrectAnswer : question.PromptText);
+                var translation = promptIsUkrainian ? question.PromptText : question.CorrectAnswer;
+
+                return new VocabularyEntry(
+                    word: word,
+                    translation: translation,
+                    explanation: question.Explanation ?? "",
+                    example: question.Example ?? "",
+                    partOfSpeech: question.PartOfSpeech);
+            })
             .ToArray();
 
     private async Task DownloadReview()
