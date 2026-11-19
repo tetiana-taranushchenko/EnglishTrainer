@@ -6,6 +6,7 @@ using Serilog;
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .MinimumLevel.Override("Microsoft.AspNetCore", Serilog.Events.LogEventLevel.Warning)
+    .Enrich.FromLogContext()
     .WriteTo.Console()
     .WriteTo.File(
         path: "logs/app-.log",

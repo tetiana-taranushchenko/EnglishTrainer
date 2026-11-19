@@ -4,50 +4,41 @@ namespace EnglishTrainer.Data;
 
 public class StarterQuestions
 {
+    private record StarterItem(
+        string English,
+        string Ukrainian,
+        string PartOfSpeech,
+        string[] UkrainianOptions,
+        string[] EnglishOptions);
+
+    private static readonly StarterItem[] Items =
+    [
+        new(
+            "reliable",
+            "надійний",
+            "adjective",
+            ["навмисний", "надійний", "потребує багато часу", "гнучкий"],
+            ["intentional", "reliable", "time-consuming", "flexible"]),
+        new(
+            "contemplate",
+            "розмірковувати",
+            "verb",
+            ["проводити", "підтримувати", "пропонувати", "розмірковувати"],
+            ["conduct", "maintain", "suggest", "contemplate"])
+    ];
+
     public static PracticeQuestion[] Create(
         PracticeDirection direction = PracticeDirection.UkrainianToEnglish)
     {
-        if (direction == PracticeDirection.EnglishToUkrainian)
-        {
-            return
-            [
-                new PracticeQuestion(
-                    "reliable",
-                    "adjective",
-                    ["навмисний", "надійний", "потребує багато часу", "гнучкий"],
-                    "надійний",
-                    promptLanguage: "en",
-                    optionsLanguage: "uk"
-                ) { EnglishWord = "reliable" },
-                new PracticeQuestion(
-                    "contemplate",
-                    "verb",
-                    ["проводити", "підтримувати", "пропонувати", "розмірковувати"],
-                    "розмірковувати",
-                    promptLanguage: "en",
-                    optionsLanguage: "uk"
-                ) { EnglishWord = "contemplate" }
-            ];
-        }
+        bool enToUk = direction == PracticeDirection.EnglishToUkrainian;
 
-        return
-        [
-            new PracticeQuestion(
-                "надійний",
-                "adjective",
-                ["intentional", "reliable", "time-consuming", "flexible"],
-                "reliable",
-                promptLanguage: "uk",
-                optionsLanguage: "en"
-            ) { EnglishWord = "reliable" },
-            new PracticeQuestion(
-                "розмірковувати",
-                "verb",
-                ["conduct", "maintain", "suggest", "contemplate"],
-                "contemplate",
-                promptLanguage: "uk",
-                optionsLanguage: "en"
-            ) { EnglishWord = "contemplate" }
-        ];
+        return Items.Select(item => new PracticeQuestion(
+            promptText: enToUk ? item.English : item.Ukrainian,
+            partOfSpeech: item.PartOfSpeech,
+            options: enToUk ? item.UkrainianOptions : item.EnglishOptions,
+            correctAnswer: enToUk ? item.Ukrainian : item.English,
+            promptLanguage: enToUk ? "en" : "uk",
+            optionsLanguage: enToUk ? "uk" : "en"
+        ) { EnglishWord = item.English }).ToArray();
     }
 }

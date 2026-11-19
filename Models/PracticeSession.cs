@@ -3,13 +3,13 @@ namespace EnglishTrainer.Models;
 public class PracticeSession
 {
     private readonly PracticeQuestion[] _questions;
-    private int _currentQuestionIndex = 0;
+    private int _currentQuestionIndex;
     public PracticeQuestion CurrentQuestion => _questions[_currentQuestionIndex];
     private readonly List<PracticeAnswer> _answers = new();
     public int TotalQuestions => _questions.Length;
     public int CorrectCount => _answers.Count(answer => answer.IsCorrect);
     public int IncorrectCount => _answers.Count - CorrectCount;
-    public IReadOnlyList<PracticeAnswer> Answers => _answers.AsReadOnly();
+    public IReadOnlyList<PracticeAnswer> Answers => _answers;
     
     public PracticeSession(PracticeQuestion[] questions)
     {
