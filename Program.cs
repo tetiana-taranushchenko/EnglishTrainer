@@ -1,6 +1,7 @@
 using EnglishTrainer.Components;
 using EnglishTrainer.Data;
 using EnglishTrainer.Models;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -30,7 +31,16 @@ builder.Services.AddSingleton<PracticeQuestionFactory>();
 builder.Services.AddSingleton<CsvVocabularyImporter>();
 builder.Services.AddSingleton<IVocabularyImporter>(sp => sp.GetRequiredService<CsvVocabularyImporter>());
 
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 var app = builder.Build();
+
+app.UseForwardedHeaders();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
